@@ -8,13 +8,10 @@
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     
     <script type="module">
-        // Importamos os arquivos da pasta libs na raiz
         import './libs/xr.js'
         import './libs/xr-slam.js'
 
-        // Configuramos o motor assim que ele carregar
         window.addEventListener('xrloaded', () => {
-            console.log("8th Wall Motor Carregado!");
             window.XR8.setxrconfig({
                 libraryPath: './resources/' 
             });
@@ -26,11 +23,12 @@
 
     <a-scene 
       xrweb="disableWorldTracking: true"
+      xrextras-almost-there
       xrextras-loading
       xrextras-runtime-error>
       
         <a-assets>
-            <a-asset-item id="meu-modelo" src="assets/modelo-3d.glb"></a-asset-item>
+            <a-asset-item id="meu-modelo" src="assets/modelo-3d.glb" timeout="60000"></a-asset-item>
         </a-assets>
 
         <a-entity xrextras-named-image-target="name: image">
@@ -42,6 +40,5 @@
 
         <a-camera position="0 0 0"></a-camera>
     </a-scene>
-
 </body>
 </html>
