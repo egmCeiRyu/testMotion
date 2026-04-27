@@ -7,25 +7,17 @@ content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,vie
 
 <title>8th Wall Final AR</title>
 
-<!-- A-Frame -->
 <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-
-<!-- Animation -->
 <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
 
-<!-- SELF HOSTED XR (modo correto) -->
 <script src="./libs/xr.js"></script>
 <script src="./libs/xr-slam.js"></script>
 
 <script>
 window.addEventListener('xrloaded', () => {
-
   XR8.setxrconfig({
     libraryPath: './resources/'
   })
-
-  console.log('XR pronto')
-
 })
 </script>
 
@@ -75,19 +67,10 @@ xrextras-loading
 xrextras-runtime-error
 xrextras-almost-there>
 
-<a-assets>
-
-<a-asset-item
-id="thriller"
-src="./assets/modelo-3d.glb">
-</a-asset-item>
-
-</a-assets>
-
 <xrextras-named-image-target name="image">
 
 <a-entity
-gltf-model="#thriller"
+gltf-model="url(./assets/modelo-3d.glb)"
 animation-mixer
 position="0 0 0"
 rotation="0 180 0"
