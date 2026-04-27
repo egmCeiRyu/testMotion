@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Test</title>
+    <title>AR Test - Cube</title>
     
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     
@@ -20,22 +20,14 @@
 </head>
 
 <body style="margin: 0; overflow: hidden; background: black;">
-
     <a-scene 
       xrweb="disableWorldTracking: true"
       xrextras-almost-there
       xrextras-loading
       xrextras-runtime-error>
-      
-        <a-assets>
-            <a-asset-item id="meu-modelo" src="assets/modelo-3d.glb" timeout="60000"></a-asset-item>
-        </a-assets>
 
         <a-entity xrextras-named-image-target="name: image">
-            <a-entity 
-                gltf-model="#meu-modelo" 
-                scale="0.001 0.001 0.001">
-            </a-entity>
+            <a-box position="0 0.5 0" material="color: red" scale="0.5 0.5 0.5"></a-box>
         </a-entity>
 
         <a-camera position="0 0 0"></a-camera>
