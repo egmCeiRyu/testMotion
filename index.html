@@ -5,21 +5,13 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<title>8th Wall Final AR</title>
+<title>8th Wall AR</title>
 
 <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
 
 <script src="./libs/xr.js"></script>
 <script src="./libs/xr-slam.js"></script>
-
-<script>
-window.addEventListener('xrloaded', () => {
-  XR8.setxrconfig({
-    libraryPath: './resources/'
-  })
-})
-</script>
 
 <style>
 html,body{
@@ -28,8 +20,7 @@ padding:0;
 width:100%;
 height:100%;
 overflow:hidden;
-background:transparent;
-touch-action:none;
+background:#000;
 }
 
 a-scene{
@@ -39,45 +30,32 @@ left:0;
 width:100%;
 height:100%;
 }
-
-#msg{
-position:fixed;
-top:20px;
-left:50%;
-transform:translateX(-50%);
-z-index:9999;
-padding:10px 16px;
-border-radius:12px;
-background:rgba(0,0,0,.45);
-color:#fff;
-font-family:Arial;
-font-size:15px;
-}
 </style>
 </head>
 
 <body>
 
-<div id="msg">Escaneie o marker</div>
-
 <a-scene
-xrweb="imageTargetsSrc: assets/image.wtarget"
-renderer="alpha:true; antialias:true; colorManagement:true"
+xrweb
 xrextras-loading
 xrextras-runtime-error
-xrextras-almost-there>
+xrextras-almost-there
+renderer="alpha:true;antialias:true">
 
-<xrextras-named-image-target name="image">
+<a-assets>
+<a-asset-item
+id="modelo"
+src="./assets/modelo-3d.glb">
+</a-asset-item>
+</a-assets>
 
 <a-entity
-gltf-model="url(./assets/modelo-3d.glb)"
+gltf-model="#modelo"
 animation-mixer
-position="0 0 0"
+position="0 0 -3"
 rotation="0 180 0"
 scale="0.35 0.35 0.35">
 </a-entity>
-
-</xrextras-named-image-target>
 
 <a-camera position="0 0 0"></a-camera>
 
