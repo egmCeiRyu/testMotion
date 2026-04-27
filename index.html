@@ -5,12 +5,12 @@
 <meta name="viewport"
 content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<title>8th Wall Self Hosted AR</title>
+<title>Thriller AR Final</title>
 
 <!-- A-Frame -->
 <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-<!-- Animation Mixer -->
+<!-- Animation -->
 <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
 
 <!-- Self Hosted XR -->
@@ -23,7 +23,7 @@ window.addEventListener('xrloaded', () => {
     libraryPath: './resources/'
   })
 
-  console.log('XR Engine Ready')
+  console.log('XR carregado')
 })
 </script>
 
@@ -67,17 +67,19 @@ font-size:15px;
 <div id="msg">Escaneie o marker</div>
 
 <a-scene
-xrweb
+xrweb="imageTargetsSrc: assets/image.wtarget"
 renderer="alpha:true; antialias:true; colorManagement:true"
 xrextras-loading
 xrextras-runtime-error
 xrextras-almost-there>
 
 <a-assets>
+
 <a-asset-item
 id="thriller"
-src="./assets/modelo-3d.glb">
+src="assets/modelo-3d.glb">
 </a-asset-item>
+
 </a-assets>
 
 <xrextras-named-image-target name="image">
