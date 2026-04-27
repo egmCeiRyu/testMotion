@@ -3,16 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 
-<title>AR Thriller Final</title>
+<title>8th Wall Self Hosted AR</title>
 
 <!-- A-Frame -->
 <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
 
-<!-- Animations -->
+<!-- Animation Mixer -->
 <script src="https://cdn.jsdelivr.net/npm/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
 
+<!-- Self Hosted XR -->
 <script type="module">
 import './libs/xr.js'
 import './libs/xr-slam.js'
@@ -22,12 +23,7 @@ window.addEventListener('xrloaded', () => {
     libraryPath: './resources/'
   })
 
-  const scene = document.querySelector('a-scene')
-
-  if (scene) {
-    scene.setAttribute('xrweb', 'disableWorldTracking: true')
-    console.log('XR iniciado com sucesso')
-  }
+  console.log('XR Engine Ready')
 })
 </script>
 
@@ -38,20 +34,29 @@ padding:0;
 width:100%;
 height:100%;
 overflow:hidden;
-background:#000;
-font-family:Arial;
+background:transparent;
+touch-action:none;
 }
 
-#txt{
+a-scene{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+}
+
+#msg{
 position:fixed;
 top:20px;
 left:50%;
 transform:translateX(-50%);
-z-index:999;
-color:#fff;
-background:rgba(0,0,0,.55);
+z-index:9999;
 padding:10px 16px;
 border-radius:12px;
+background:rgba(0,0,0,.45);
+color:#fff;
+font-family:Arial;
 font-size:15px;
 }
 </style>
@@ -59,25 +64,26 @@ font-size:15px;
 
 <body>
 
-<div id="txt">Escaneie o marker</div>
+<div id="msg">Escaneie o marker</div>
 
 <a-scene
+xrweb
+renderer="alpha:true; antialias:true; colorManagement:true"
 xrextras-loading
 xrextras-runtime-error
 xrextras-almost-there>
 
 <a-assets>
 <a-asset-item
-id="meu-modelo"
+id="thriller"
 src="./assets/modelo-3d.glb">
 </a-asset-item>
 </a-assets>
 
-<!-- IMAGE TARGET CERTO -->
 <xrextras-named-image-target name="image">
 
 <a-entity
-gltf-model="#meu-modelo"
+gltf-model="#thriller"
 animation-mixer
 position="0 0 0"
 rotation="0 180 0"
