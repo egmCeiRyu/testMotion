@@ -34,22 +34,33 @@
 
 <body style="margin: 0; overflow: hidden; background: black;">
 
-    <a-scene 
-      xrextras-almost-there
-      xrextras-loading
-      xrextras-runtime-error>
-      
-        <a-assets>
-            <a-asset-item id="meu-modelo" src="assets/modelo-3d.glb" timeout="60000"></a-asset-item>
-        </a-assets>
+   <a-scene
+xrextras-almost-there
+xrextras-loading
+xrextras-runtime-error>
 
-        <a-entity xrextras-named-image-target="name: image">
-            <a-box position="0 0.5 0" material="color: red"></a-box>
-            
-            </a-entity>
+<a-assets>
+<a-asset-item
+id="meu-modelo"
+src="./assets/modelo-3d.glb">
+</a-asset-item>
+</a-assets>
 
-        <a-camera position="0 0 0"></a-camera>
-    </a-scene>
+<a-entity xrextras-named-image-target="name: image">
+
+<a-entity
+gltf-model="#meu-modelo"
+animation-mixer
+position="0 0 0"
+rotation="0 180 0"
+scale="0.35 0.35 0.35">
+</a-entity>
+
+</a-entity>
+
+<a-camera position="0 0 0"></a-camera>
+
+</a-scene>
 
 </body>
 </html>
