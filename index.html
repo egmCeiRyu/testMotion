@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
     <meta charset="utf-8">
     <title>Meu Projeto AR Final</title>
@@ -10,7 +10,7 @@
     <script type="module" src="./libs/xr-slam.js"></script>
 
     <script type="module">
-      // Configuração para o motor encontrar a pasta resources na raiz
+      // Força o motor a buscar a inteligência na pasta resources da raiz
       window.addEventListener('xrloaded', () => {
         window.XR8.setxrconfig({
           libraryPath: './resources/' 
