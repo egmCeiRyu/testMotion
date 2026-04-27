@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Meu Projeto AR Final</title>
+    <title>Meu Projeto AR Final - Corrigido</title>
     
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     
@@ -10,18 +10,43 @@
     <script type="module" src="./libs/xr-slam.js"></script>
 
     <script type="module">
-      // Força o motor a buscar a inteligência na pasta resources da raiz
+      // 3. Configuração para o motor encontrar a pasta resources na raiz
+      // E configurar a câmera antes do A-Frame iniciar
       window.addEventListener('xrloaded', () => {
+        // Define o caminho da biblioteca de IA
         window.XR8.setxrconfig({
           libraryPath: './resources/' 
+        })
+        
+        // Adiciona um evento para lidar com a permissão da câmera
+        window.XR8.addCameraPipelineModule({
+          name: 'camera-permissions',
+          onStart: () => {
+            // Isso confirma que a câmera iniciou
+            console.log("Câmera iniciada pela 8th Wall")
+          },
+          onException: (error) => {
+            // Se der erro na câmera (como falta de HTTPS), avisa aqui
+            console.error("Erro na câmera:", error)
+          }
         })
       })
     </script>
 </head>
 
-<body style="margin: 0; overflow: hidden;">
+<body style="margin: 0; overflow: hidden; background-color: black;">
 
-    <a-scene xrweb="disableWorldTracking: true">
+    <a-scene 
+      xrweb="disableWorldTracking: true; required: true"
+      xrextras-almost-there
+      xrextras-loading
+      xrextras-runtime-error
+      inspector="" 
+      keyboard-shortcuts="" 
+      screenshot="" 
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false">
+      
         <a-assets>
             <a-asset-item id="meu-modelo" src="./assets/modelo-3d.glb"></a-asset-item>
         </a-assets>
@@ -29,8 +54,9 @@
         <a-entity xrextras-named-image-target="name: image">
             <a-entity 
                 gltf-model="#meu-modelo" 
-                scale="1 1 1"
-                rotation="0 0 0">
+                scale="0.01 0.01 0.01"
+                rotation="0 0 0"
+                position="0 0 0">
             </a-entity>
         </a-entity>
 
