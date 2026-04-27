@@ -3,42 +3,40 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AR Image Tracking</title>
+    <title>AR Test</title>
     
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     
     <script type="module">
-      // Importa os arquivos locais
-      import './libs/xr.js'
-      import './libs/xr-slam.js'
+        // Importamos os arquivos da pasta libs na raiz
+        import './libs/xr.js'
+        import './libs/xr-slam.js'
 
-      // Espera o motor estar carregado na memória
-      window.addEventListener('xrloaded', () => {
-        // Agora o XR8 existe e as funções estão disponíveis
-        XR8.setxrconfig({
-          libraryPath: './resources/' 
-        })
-      })
+        // Configuramos o motor assim que ele carregar
+        window.addEventListener('xrloaded', () => {
+            console.log("8th Wall Motor Carregado!");
+            window.XR8.setxrconfig({
+                libraryPath: './resources/' 
+            });
+        });
     </script>
 </head>
 
 <body style="margin: 0; overflow: hidden; background: black;">
 
     <a-scene 
-      xrweb="disableWorldTracking: true; required: true"
+      xrweb="disableWorldTracking: true"
       xrextras-loading
-      xrextras-runtime-error
-      vr-mode-ui="enabled: false">
+      xrextras-runtime-error>
       
         <a-assets>
-            <a-asset-item id="meu-modelo" src="./assets/modelo-3d.glb"></a-asset-item>
+            <a-asset-item id="meu-modelo" src="assets/modelo-3d.glb"></a-asset-item>
         </a-assets>
 
         <a-entity xrextras-named-image-target="name: image">
             <a-entity 
                 gltf-model="#meu-modelo" 
-                scale="0.001 0.001 0.001"
-                rotation="0 0 0">
+                scale="0.001 0.001 0.001">
             </a-entity>
         </a-entity>
 
