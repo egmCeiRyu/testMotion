@@ -7,14 +7,15 @@
     
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     
-    <script src="./libs/xr.js"></script>
-    <script src="./libs/xr-slam.js"></script>
+    <script type="module">
+      // Importa os arquivos locais
+      import './libs/xr.js'
+      import './libs/xr-slam.js'
 
-    <script>
-      // Configuração antes da cena carregar
+      // Espera o motor estar carregado na memória
       window.addEventListener('xrloaded', () => {
-        // Isso resolve o erro de "null reading src"
-        window.XR8.setxrconfig({
+        // Agora o XR8 existe e as funções estão disponíveis
+        XR8.setxrconfig({
           libraryPath: './resources/' 
         })
       })
@@ -24,13 +25,13 @@
 <body style="margin: 0; overflow: hidden; background: black;">
 
     <a-scene 
-      xrweb="disableWorldTracking: true"
+      xrweb="disableWorldTracking: true; required: true"
       xrextras-loading
       xrextras-runtime-error
       vr-mode-ui="enabled: false">
       
         <a-assets>
-            <a-asset-item id="meu-modelo" src="assets/modelo-3d.glb"></a-asset-item>
+            <a-asset-item id="meu-modelo" src="./assets/modelo-3d.glb"></a-asset-item>
         </a-assets>
 
         <a-entity xrextras-named-image-target="name: image">
