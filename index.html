@@ -2,34 +2,33 @@
 <html lang="ja">
 <head>
     <meta charset="utf-8">
-    <title>Meu AR Local Corrigido</title>
+    <title>Meu Projeto AR Final</title>
     
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     
-    <script type="module">
-      // Importamos o XR8 para configurar o caminho da biblioteca antes da cena carregar
-      import './libs/xr.js'
-      import './libs/xr-slam.js'
+    <script type="module" src="./libs/xr.js"></script>
+    <script type="module" src="./libs/xr-slam.js"></script>
 
+    <script type="module">
+      // Configuração para o motor encontrar a pasta resources na raiz
       window.addEventListener('xrloaded', () => {
-        // Isso avisa ao motor onde encontrar os arquivos .tflite e webassembly
-        // que estão na sua pasta resources
         window.XR8.setxrconfig({
           libraryPath: './resources/' 
         })
       })
     </script>
 </head>
+
 <body style="margin: 0; overflow: hidden;">
 
     <a-scene xrweb="disableWorldTracking: true">
         <a-assets>
-            <a-asset-item id="modelo-3d" src="resources/dom-tablet-frame.glb"></a-asset-item>
+            <a-asset-item id="meu-modelo" src="./assets/modelo-3d.glb"></a-asset-item>
         </a-assets>
 
         <a-entity xrextras-named-image-target="name: image">
             <a-entity 
-                gltf-model="#modelo-3d" 
+                gltf-model="#meu-modelo" 
                 scale="1 1 1"
                 rotation="0 0 0">
             </a-entity>
