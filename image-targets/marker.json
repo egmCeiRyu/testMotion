@@ -2,37 +2,15 @@
   "type": "PLANAR",
   "properties": {
     "top": 0,
-    "left": 144,
-    "width": 941,
+    "left": 156,
+    "width": 940,
     "height": 1254,
     "isRotated": false,
     "originalWidth": 1254,
     "originalHeight": 1254
   },
   "imagePath": "image-targets/marker_luminance.png",
-  "metadata": {
-    "type": "PLANAR",
-    "properties": {
-      "top": 0,
-      "left": 144,
-      "width": 941,
-      "height": 1254,
-      "isRotated": false,
-      "originalWidth": 1254,
-      "originalHeight": 1254
-    },
-    "imagePath": "image-targets/marker_luminance.png",
-    "metadata": null,
-    "name": "marker",
-    "resources": {
-      "originalImage": "marker_original.png",
-      "croppedImage": "marker_cropped.png",
-      "thumbnailImage": "marker_thumbnail.png",
-      "luminanceImage": "marker_luminance.png"
-    },
-    "created": 1777364648883,
-    "updated": 1777366647349
-  },
+  "metadata": null,
   "name": "marker",
   "resources": {
     "originalImage": "marker_original.png",
@@ -40,6 +18,6 @@
     "thumbnailImage": "marker_thumbnail.png",
     "luminanceImage": "marker_luminance.png"
   },
-  "created": 1777364648883,
-  "updated": 1777367342718
+  "created": 1777464313572,
+  "updated": 1777464313572
 }
