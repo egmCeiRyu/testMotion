@@ -218,6 +218,7 @@
 
 <body>
   
+<!--
 <button id="captureBtn">
 
   <span id="captureIcon">
@@ -225,6 +226,7 @@
   </span>
 
 </button>
+-->
   
 <div id="fabContainer">
 
@@ -232,8 +234,10 @@
     +
   </button>
 
-  <div class="fabItem" id="photoFab">
-    📷
+  <div class="fabItem" id="captureBtn">
+    <span id="captureIcon">
+      ◉
+    </span>
   </div>
 
   <div class="fabItem" id="videoFab">
@@ -398,7 +402,7 @@
 <script>
 
 document
-.getElementById('photoFab')
+.getElementById('captureBtn')
 .addEventListener('click', function(){
 
   // esconder UI
