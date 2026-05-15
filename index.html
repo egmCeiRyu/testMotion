@@ -135,7 +135,6 @@
 }
   
 
-/*
 #captureBtn {
 
   position: fixed !important;
@@ -178,7 +177,6 @@
   top: -1px;
 
 }
-*/
   
 #scaleLabel {
 
@@ -219,7 +217,6 @@
 
 <body>
   
-<!--
 <button id="captureBtn">
 
   <span id="captureIcon">
@@ -227,7 +224,6 @@
   </span>
 
 </button>
--->
   
 <div id="scaleLabel">
 
@@ -288,11 +284,8 @@
 
   xrextras-loading
   xrextras-runtime-error
-
-  loading-screen="
-    disabled:false;
-    branding:false;
-  "
+         
+  loading-screen="disabled: false; branding: false">
 
   renderer="colorManagement:true"
 
@@ -415,7 +408,7 @@
 <script>
 
 document
-.getElementById('photoFab')
+.getElementById('captureBtn')
 .addEventListener('click', function(){
 
   // esconder UI
