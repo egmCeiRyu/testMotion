@@ -413,14 +413,10 @@ function(t){
 
 t.isMesh &&
 t.material &&
-
+t.material.name==="wall_mat" &&
 (
-
-t.material=
-t.material.clone(),
-
-t.material.color.set(n)
-
+  t.material=t.material.clone(),
+  t.material.color.set(n)
 );
 
 }
