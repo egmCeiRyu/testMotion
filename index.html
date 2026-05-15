@@ -2,7 +2,7 @@
 <html lang="ja">
 
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
 
   <meta
     name="viewport"
@@ -35,9 +35,6 @@
     data-preload-chunks="slam">
   </script>
 
-  <!-- Seu JS -->
-  <script src="./tap-place.js"></script>
-
   <style>
 
     html,
@@ -51,6 +48,7 @@
     }
 
     #promptText {
+
       position: fixed;
 
       bottom: 140px;
@@ -59,6 +57,7 @@
       transform: translateX(-50%);
 
       color: white;
+
       font-size: 24px;
       font-weight: bold;
 
@@ -67,6 +66,7 @@
       z-index: 999;
 
       pointer-events: none;
+
     }
 
     #colorMenu {
@@ -102,12 +102,12 @@
 
 <body>
 
-  <!-- TEXTO -->
+  <!-- TAP TEXT -->
   <div id="promptText">
     タップして配置
   </div>
 
-  <!-- MENU DE CORES -->
+  <!-- COLOR MENU -->
   <div id="colorMenu">
 
     <button
@@ -181,7 +181,7 @@
     >
     </a-camera>
 
-    <!-- LUZ -->
+    <!-- LIGHT -->
     <a-light
       type="ambient"
       intensity="1">
@@ -196,8 +196,6 @@
     <!-- GROUND -->
     <a-plane
 
-      id="ground"
-
       class="cantap"
 
       rotation="-90 0 0"
@@ -206,6 +204,7 @@
       height="500"
 
       material="
+        color:#ffffff;
         opacity:0;
         transparent:true;
       "
@@ -232,7 +231,7 @@
 
     </a-ring>
 
-    <!-- CASA -->
+    <!-- MODEL -->
     <a-entity
 
       id="model"
@@ -241,12 +240,269 @@
 
       visible="false"
 
-      scale="1 1 1"
-
     >
     </a-entity>
 
   </a-scene>
+
+  <script>
+
+    AFRAME.registerComponent('tap-place', {
+
+      init: function () {
+
+        const scene =
+          this.el;
+
+        const model =
+          document.getElementById('model');
+
+        const ring =
+          document.getElementById('tapRing');
+
+        const prompt =
+          document.getElementById('promptText');
+
+        let isPlaced = false;
+
+        // =========================
+        // TAP PLACE
+        // =========================
+
+        scene.addEventListener('click', function (event) {
+
+          const intersection =
+            event.detail.intersection;
+
+          if (!intersection) {
+            return;
+          }
+
+          const point =
+            intersection.point;
+
+          ring.setAttribute(
+            'visible',
+            'true'
+          );
+
+          ring.object3D.position.copy(
+            point
+          );
+
+          model.setAttribute(
+            'visible',
+            'true'
+          );
+
+          model.object3D.position.copy(
+            point
+          );
+
+          // começa em 30%
+          if (!isPlaced) {
+
+            model.object3D.scale.set(
+              0.3,
+              0.3,
+              0.3
+            );
+
+            isPlaced = true;
+
+          }
+
+          prompt.style.display =
+            'none';
+
+        });
+
+        // =========================
+        // COLOR CHANGE
+        // =========================
+
+        document
+          .querySelectorAll('#colorMenu button')
+          .forEach(function (btn) {
+
+            btn.addEventListener('click', function () {
+
+              const selectedColor =
+                btn.dataset.color;
+
+              model.object3D.traverse(function (obj) {
+
+                if (
+                  !obj.isMesh ||
+                  !obj.material
+                ) {
+                  return;
+                }
+
+                obj.material.color.set(
+                  selectedColor
+                );
+
+                obj.material.needsUpdate =
+                  true;
+
+              });
+
+            });
+
+          });
+
+        // =========================
+        // PINCH SCALE
+        // =========================
+
+        let initialDistance = 0;
+        let initialScale = 1;
+
+        function getDistance(t1, t2) {
+
+          const dx =
+            t1.clientX - t2.clientX;
+
+          const dy =
+            t1.clientY - t2.clientY;
+
+          return Math.sqrt(
+            dx * dx + dy * dy
+          );
+
+        }
+
+        window.addEventListener(
+          'touchstart',
+          function (e) {
+
+            if (
+              e.touches.length === 2
+            ) {
+
+              initialDistance =
+                getDistance(
+                  e.touches[0],
+                  e.touches[1]
+                );
+
+              initialScale =
+                model.object3D.scale.x;
+
+            }
+
+          },
+          { passive:false }
+        );
+
+        window.addEventListener(
+          'touchmove',
+          function (e) {
+
+            if (
+              e.touches.length === 2
+            ) {
+
+              e.preventDefault();
+
+              const currentDistance =
+                getDistance(
+                  e.touches[0],
+                  e.touches[1]
+                );
+
+              let scale =
+                initialScale *
+                (
+                  currentDistance /
+                  initialDistance
+                );
+
+              scale =
+                Math.max(
+                  0.3,
+                  Math.min(1, scale)
+                );
+
+              model.object3D.scale.set(
+                scale,
+                scale,
+                scale
+              );
+
+            }
+
+          },
+          { passive:false }
+        );
+
+        // =========================
+        // ROTATION
+        // =========================
+
+        let previousX = 0;
+        let rotating = false;
+
+        window.addEventListener(
+          'touchstart',
+          function (e) {
+
+            if (
+              e.touches.length === 1 &&
+              isPlaced
+            ) {
+
+              rotating = true;
+
+              previousX =
+                e.touches[0].clientX;
+
+            }
+
+          }
+        );
+
+        window.addEventListener(
+          'touchmove',
+          function (e) {
+
+            if (
+              rotating &&
+              e.touches.length === 1
+            ) {
+
+              const currentX =
+                e.touches[0].clientX;
+
+              const deltaX =
+                currentX - previousX;
+
+              model.object3D.rotation.y +=
+                deltaX * 0.01;
+
+              previousX =
+                currentX;
+
+            }
+
+          }
+        );
+
+        window.addEventListener(
+          'touchend',
+          function () {
+
+            rotating = false;
+
+          }
+        );
+
+      }
+
+    });
+
+  </script>
 
 </body>
 

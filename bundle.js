@@ -1,3 +1,5 @@
+// bundle.js
+
 AFRAME.registerComponent('tap-place', {
 
   init: function () {
@@ -32,7 +34,6 @@ AFRAME.registerComponent('tap-place', {
       const point =
         intersection.point;
 
-      // ring
       ring.setAttribute(
         'visible',
         'true'
@@ -42,7 +43,6 @@ AFRAME.registerComponent('tap-place', {
         point
       );
 
-      // model
       model.setAttribute(
         'visible',
         'true'
@@ -52,7 +52,7 @@ AFRAME.registerComponent('tap-place', {
         point
       );
 
-      // começa pequeno somente 1 vez
+      // começa em 30%
       if (!isPlaced) {
 
         model.object3D.scale.set(
@@ -73,16 +73,6 @@ AFRAME.registerComponent('tap-place', {
     // =========================
     // COLOR CHANGE
     // =========================
-
-    const paintableMaterials = [
-      'Wall',
-      'wall',
-      'Paint',
-      'paint',
-      'Exterior',
-      'Facade',
-      'Casa'
-    ];
 
     document
       .querySelectorAll('#colorMenu button')
@@ -121,30 +111,12 @@ AFRAME.registerComponent('tap-place', {
 
             materials.forEach(function (mat) {
 
-              const matName =
-                mat.name || '';
-
-              const canPaint =
-                paintableMaterials.some(
-                  function (name) {
-
-                    return matName.includes(
-                      name
-                    );
-
-                  }
-                );
-
-              if (!canPaint) {
-                return;
-              }
-
-              // preserva textura
               mat.color.set(
                 selectedColor
               );
 
-              mat.needsUpdate = true;
+              mat.needsUpdate =
+                true;
 
             });
 
@@ -161,22 +133,16 @@ AFRAME.registerComponent('tap-place', {
     let initialDistance = 0;
     let initialScale = 1;
 
-    function getDistance(
-      touch1,
-      touch2
-    ) {
+    function getDistance(t1, t2) {
 
       const dx =
-        touch1.clientX -
-        touch2.clientX;
+        t1.clientX - t2.clientX;
 
       const dy =
-        touch1.clientY -
-        touch2.clientY;
+        t1.clientY - t2.clientY;
 
       return Math.sqrt(
-        dx * dx +
-        dy * dy
+        dx * dx + dy * dy
       );
 
     }
@@ -220,32 +186,23 @@ AFRAME.registerComponent('tap-place', {
               e.touches[1]
             );
 
-          let scaleFactor =
-            currentDistance /
-            initialDistance;
-
-          let newScale =
+          let scale =
             initialScale *
-            scaleFactor;
-
-          // mínimo 30%
-          newScale =
-            Math.max(
-              0.3,
-              newScale
+            (
+              currentDistance /
+              initialDistance
             );
 
-          // máximo 100%
-          newScale =
-            Math.min(
-              1,
-              newScale
+          scale =
+            Math.max(
+              0.3,
+              Math.min(1, scale)
             );
 
           model.object3D.scale.set(
-            newScale,
-            newScale,
-            newScale
+            scale,
+            scale,
+            scale
           );
 
         }
@@ -259,7 +216,6 @@ AFRAME.registerComponent('tap-place', {
     // =========================
 
     let previousX = 0;
-
     let rotating = false;
 
     window.addEventListener(
@@ -294,8 +250,7 @@ AFRAME.registerComponent('tap-place', {
             e.touches[0].clientX;
 
           const deltaX =
-            currentX -
-            previousX;
+            currentX - previousX;
 
           model.object3D.rotation.y +=
             deltaX * 0.01;
