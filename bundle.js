@@ -163,7 +163,7 @@ AFRAME.registerComponent("tap-place", {
         newScale = Math.max(0.9, newScale);
 
         // maximo 100%
-        newScale = Math.min(3, newScale);
+        newScale = Math.max(0.3, newScale);
 
         model.object3D.scale.set(
           newScale,
@@ -192,7 +192,7 @@ AFRAME.registerComponent("tap-place", {
       );
 
       // começa pequeno
-      model.object3D.scale.set(0.9, 0.9, 0.9);
+      model.object3D.scale.set(0.3, 0.3, 0.3);
 
     });
 
@@ -272,7 +272,7 @@ AFRAME.registerComponent("tap-place", {
 
       const scale = model.object3D.scale.x;
 
-      const percent = Math.round((scale / 3) * 100);
+      const percent = Math.round(scale * 100);
 
       scaleLabel.innerText = "Size: " + percent + "%";
 
