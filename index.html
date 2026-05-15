@@ -1,509 +1,295 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 
 <head>
-  <meta charset="UTF-8" />
 
-  <meta
-    name="viewport"
-    content="
-      width=device-width,
-      initial-scale=1,
-      maximum-scale=1,
-      user-scalable=no
-    "
-  />
+<meta charset="UTF-8">
 
-  <title>House AR</title>
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1">
 
-  <!-- 8th Wall -->
-  <script
-    src="./external/scripts/8frame-1.5.0.min.js">
-  </script>
+<title>AR Model Viewer</title>
 
-  <!-- XR Extras -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@8thwall/xrextras@1/dist/xrextras.js"
-    crossorigin="anonymous">
-  </script>
+<script
+  crossorigin="anonymous"
+  src="./external/scripts/8frame-1.5.0.min.js">
+</script>
 
-  <!-- XR Engine -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@8thwall/engine-binary@1/dist/xr.js"
-    async
-    crossorigin="anonymous"
-    data-preload-chunks="slam">
-  </script>
+<script
+  src="https://cdn.jsdelivr.net/npm/@8thwall/xrextras@1/dist/xrextras.js"
+  crossorigin="anonymous">
+</script>
 
-  <style>
+<script
+  src="https://cdn.jsdelivr.net/npm/@8thwall/landing-page@1/dist/landing-page.js"
+  crossorigin="anonymous">
+</script>
 
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: black;
-      font-family: Arial, sans-serif;
-    }
+<script
+  src="https://cdn.jsdelivr.net/npm/@8thwall/engine-binary@1/dist/xr.js"
+  crossorigin="anonymous"
+  async
+  data-preload-chunks="slam">
+</script>
 
-    #promptText {
+<style>
 
-      position: fixed;
+#colorMenu {
 
-      bottom: 140px;
-      left: 50%;
+  position: fixed;
 
-      transform: translateX(-50%);
+  bottom: 30px;
+  left: 50%;
 
-      color: white;
+  transform: translateX(-50%);
 
-      font-size: 24px;
-      font-weight: bold;
+  display: flex;
+  gap: 10px;
 
-      text-shadow: 0 0 10px black;
+  z-index: 999;
 
-      z-index: 999;
+}
 
-      pointer-events: none;
+#colorMenu button {
 
-    }
+  width: 42px;
+  height: 42px;
 
-    #colorMenu {
+  border-radius: 50%;
 
-      position: fixed;
+  border: 3px solid white;
 
-      bottom: 30px;
-      left: 50%;
+}
 
-      transform: translateX(-50%);
-
-      display: flex;
-      gap: 10px;
-
-      z-index: 999;
-
-    }
-
-    #colorMenu button {
-
-      width: 42px;
-      height: 42px;
-
-      border-radius: 50%;
-
-      border: 3px solid white;
-
-    }
-
-  </style>
+</style>
 
 </head>
 
 <body>
 
-  <!-- TAP TEXT -->
-  <div id="promptText">
-    タップして配置
-  </div>
+<script src="bundle.js"></script>
 
-  <!-- COLOR MENU -->
-  <div id="colorMenu">
+<!-- COLOR SCRIPT -->
+<script>
 
-    <button
-      data-color="#d9d2c3"
-      style="background:#d9d2c3;">
-    </button>
+window.addEventListener('load', function(){
 
-    <button
-      data-color="#bfa58a"
-      style="background:#bfa58a;">
-    </button>
+  const model =
+    document.getElementById('model');
 
-    <button
-      data-color="#8b6f5a"
-      style="background:#8b6f5a;">
-    </button>
+  document
+    .querySelectorAll('#colorMenu button')
+    .forEach(function(btn){
 
-    <button
-      data-color="#5c4435"
-      style="background:#5c4435;">
-    </button>
+      btn.addEventListener('click', function(){
 
-    <button
-      data-color="#2f241d"
-      style="background:#2f241d;">
-    </button>
+        const selectedColor =
+          btn.dataset.color;
 
-  </div>
+        model.object3D.traverse(function(obj){
 
-  <a-scene
-
-    tap-place
-
-    xrweb
-
-    xrextras-loading
-    xrextras-runtime-error
-
-    renderer="
-      colorManagement:true;
-      physicallyCorrectLights:true;
-      antialias:true;
-    "
-
-  >
-
-    <!-- ASSETS -->
-    <a-assets>
-
-      <a-asset-item
-        id="houseModel"
-        src="./house.glb">
-      </a-asset-item>
-
-    </a-assets>
-
-    <!-- CAMERA -->
-    <a-camera
-
-      position="0 1.6 0"
-
-      raycaster="
-        objects: .cantap;
-      "
-
-      cursor="
-        fuse:false;
-        rayOrigin:mouse;
-      "
-
-    >
-    </a-camera>
-
-    <!-- LIGHT -->
-    <a-light
-      type="ambient"
-      intensity="1">
-    </a-light>
-
-    <a-light
-      type="directional"
-      intensity="1.2"
-      position="1 3 2">
-    </a-light>
-
-    <!-- GROUND -->
-    <a-plane
-
-      class="cantap"
-
-      rotation="-90 0 0"
-
-      width="500"
-      height="500"
-
-      material="
-        color:#ffffff;
-        opacity:0;
-        transparent:true;
-      "
-
-    >
-    </a-plane>
-
-    <!-- TAP RING -->
-    <a-ring
-
-      id="tapRing"
-
-      rotation="-90 0 0"
-
-      radius-inner="0.15"
-      radius-outer="0.22"
-
-      material="
-        color:white;
-        shader:flat;
-      "
-
-      visible="false">
-
-    </a-ring>
-
-    <!-- MODEL -->
-    <a-entity
-
-      id="model"
-
-      gltf-model="#houseModel"
-
-      visible="false"
-
-    >
-    </a-entity>
-
-  </a-scene>
-
-  <script>
-
-    AFRAME.registerComponent('tap-place', {
-
-      init: function () {
-
-        const scene =
-          this.el;
-
-        const model =
-          document.getElementById('model');
-
-        const ring =
-          document.getElementById('tapRing');
-
-        const prompt =
-          document.getElementById('promptText');
-
-        let isPlaced = false;
-
-        // =========================
-        // TAP PLACE
-        // =========================
-
-        scene.addEventListener('click', function (event) {
-
-          const intersection =
-            event.detail.intersection;
-
-          if (!intersection) {
+          if(
+            !obj.isMesh ||
+            !obj.material
+          ){
             return;
           }
 
-          const point =
-            intersection.point;
-
-          ring.setAttribute(
-            'visible',
-            'true'
+          obj.material.color.set(
+            selectedColor
           );
 
-          ring.object3D.position.copy(
-            point
-          );
-
-          model.setAttribute(
-            'visible',
-            'true'
-          );
-
-          model.object3D.position.copy(
-            point
-          );
-
-          // começa em 30%
-          if (!isPlaced) {
-
-            model.object3D.scale.set(
-              0.3,
-              0.3,
-              0.3
-            );
-
-            isPlaced = true;
-
-          }
-
-          prompt.style.display =
-            'none';
+          obj.material.needsUpdate =
+            true;
 
         });
 
-        // =========================
-        // COLOR CHANGE
-        // =========================
-
-        document
-          .querySelectorAll('#colorMenu button')
-          .forEach(function (btn) {
-
-            btn.addEventListener('click', function () {
-
-              const selectedColor =
-                btn.dataset.color;
-
-              model.object3D.traverse(function (obj) {
-
-                if (
-                  !obj.isMesh ||
-                  !obj.material
-                ) {
-                  return;
-                }
-
-                obj.material.color.set(
-                  selectedColor
-                );
-
-                obj.material.needsUpdate =
-                  true;
-
-              });
-
-            });
-
-          });
-
-        // =========================
-        // PINCH SCALE
-        // =========================
-
-        let initialDistance = 0;
-        let initialScale = 1;
-
-        function getDistance(t1, t2) {
-
-          const dx =
-            t1.clientX - t2.clientX;
-
-          const dy =
-            t1.clientY - t2.clientY;
-
-          return Math.sqrt(
-            dx * dx + dy * dy
-          );
-
-        }
-
-        window.addEventListener(
-          'touchstart',
-          function (e) {
-
-            if (
-              e.touches.length === 2
-            ) {
-
-              initialDistance =
-                getDistance(
-                  e.touches[0],
-                  e.touches[1]
-                );
-
-              initialScale =
-                model.object3D.scale.x;
-
-            }
-
-          },
-          { passive:false }
-        );
-
-        window.addEventListener(
-          'touchmove',
-          function (e) {
-
-            if (
-              e.touches.length === 2
-            ) {
-
-              e.preventDefault();
-
-              const currentDistance =
-                getDistance(
-                  e.touches[0],
-                  e.touches[1]
-                );
-
-              let scale =
-                initialScale *
-                (
-                  currentDistance /
-                  initialDistance
-                );
-
-              scale =
-                Math.max(
-                  0.3,
-                  Math.min(1, scale)
-                );
-
-              model.object3D.scale.set(
-                scale,
-                scale,
-                scale
-              );
-
-            }
-
-          },
-          { passive:false }
-        );
-
-        // =========================
-        // ROTATION
-        // =========================
-
-        let previousX = 0;
-        let rotating = false;
-
-        window.addEventListener(
-          'touchstart',
-          function (e) {
-
-            if (
-              e.touches.length === 1 &&
-              isPlaced
-            ) {
-
-              rotating = true;
-
-              previousX =
-                e.touches[0].clientX;
-
-            }
-
-          }
-        );
-
-        window.addEventListener(
-          'touchmove',
-          function (e) {
-
-            if (
-              rotating &&
-              e.touches.length === 1
-            ) {
-
-              const currentX =
-                e.touches[0].clientX;
-
-              const deltaX =
-                currentX - previousX;
-
-              model.object3D.rotation.y +=
-                deltaX * 0.01;
-
-              previousX =
-                currentX;
-
-            }
-
-          }
-        );
-
-        window.addEventListener(
-          'touchend',
-          function () {
-
-            rotating = false;
-
-          }
-        );
-
-      }
+      });
 
     });
 
-  </script>
+});
+
+</script>
+
+<div class="over">
+
+  <span id="promptText">
+    画面をタップして配置
+  </span>
+
+</div>
+
+<!-- COLOR MENU -->
+<div id="colorMenu">
+
+  <!-- Creme -->
+  <button
+    data-color="#d9d2c3"
+    style="background:#d9d2c3;">
+  </button>
+
+  <!-- Bege -->
+  <button
+    data-color="#bfa58a"
+    style="background:#bfa58a;">
+  </button>
+
+  <!-- Marrom claro -->
+  <button
+    data-color="#8b6f5a"
+    style="background:#8b6f5a;">
+  </button>
+
+  <!-- Marrom escuro -->
+  <button
+    data-color="#5c4435"
+    style="background:#5c4435;">
+  </button>
+
+  <!-- Preto -->
+  <button
+    data-color="#2f241d"
+    style="background:#2f241d;">
+  </button>
+
+</div>
+
+<a-scene
+
+  tap-place
+
+  xrextras-gesture-detector
+
+  landing-page
+
+  xrextras-loading
+  xrextras-runtime-error
+
+  renderer="colorManagement:true"
+
+  xrweb="
+    allowedDevices:any;
+    defaultEnvironmentFogIntensity:0.5;
+    defaultEnvironmentFloorTexture:#groundTex;
+    defaultEnvironmentFloorColor:#FFF;
+    defaultEnvironmentSkyBottomColor:#B4C4CC;
+    defaultEnvironmentSkyTopColor:#5ac8fa;
+    defaultEnvironmentSkyGradientStrength:0.5;
+  "
+
+>
+
+<a-assets>
+
+  <img
+    id="groundTex"
+    src="assets/sand.jpg">
+
+  <a-asset-item
+    id="cactusModel"
+    src="assets/cactus.glb">
+  </a-asset-item>
+
+</a-assets>
+
+<a-camera
+
+  id="camera"
+
+  position="0 8 8"
+
+  raycaster="objects: .cantap"
+
+  cursor="
+    fuse:false;
+    rayOrigin:mouse;
+  "
+
+>
+</a-camera>
+
+<a-entity
+
+  light="
+    type:directional;
+    intensity:0.8;
+    castShadow:true;
+    shadowMapHeight:2048;
+    shadowMapWidth:2048;
+    shadowCameraTop:40;
+    shadowCameraBottom:-40;
+    shadowCameraRight:40;
+    shadowCameraLeft:-40;
+    target:#model
+  "
+
+  xrextras-attach="
+    target:model;
+    offset:8 15 4
+  "
+
+  position="1 4.3 2.5"
+
+  shadow>
+
+</a-entity>
+
+<a-light
+  type="ambient"
+  intensity="0.5">
+</a-light>
+
+<a-entity
+
+  id="model"
+
+  gltf-model="#cactusModel"
+
+  visible="false"
+
+  class="cantap"
+
+  xrextras-hold-drag
+
+  xrextras-two-finger-rotate
+
+  xrextras-pinch-scale="
+    min:0.3;
+    max:1;
+  "
+
+  scale="0.3 0.3 0.3"
+
+  rotation="0 0 0"
+
+  shadow="receive:false"
+
+>
+</a-entity>
+
+<a-box
+
+  id="ground"
+
+  class="cantap"
+
+  scale="1000 2 1000"
+
+  position="0 -0.99 0"
+
+  material="
+    shader:shadow;
+    transparent:true;
+    opacity:0.4
+  "
+
+  shadow>
+
+</a-box>
+
+</a-scene>
 
 </body>
-
 </html>
