@@ -35,61 +35,6 @@
 
 <style>
   
-  #fabContainer {
-
-  position: fixed;
-
-  bottom: 140px;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  z-index: 99999;
-
-}
-
-#mainFab {
-
-  width: 72px;
-  height: 72px;
-
-  border-radius: 50%;
-
-  border: none;
-
-  font-size: 42px;
-
-  background: white;
-
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-
-}
-
-.fabItem {
-
-  position: absolute;
-
-  width: 58px;
-  height: 58px;
-
-  border-radius: 50%;
-
-  background: rgba(0,0,0,0.75);
-
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  opacity: 0;
-
-  pointer-events: none;
-
-  transition: all 0.3s ease;
-
-}
-  
 /* Esconde qualquer branding da 8th Wall */
   div[data-8thwall-branding],
   .xrextras-branding,
@@ -240,29 +185,7 @@
 
 </div>
   
-  <div id="fabContainer">
-
-  <button id="mainFab">
-    +
-  </button>
-
-  <div class="fabItem" id="photoFab">
-    📷
-  </div>
-
-  <div class="fabItem" id="videoFab">
-    🎥
-  </div>
-
-  <div class="fabItem" id="shareFab">
-    ↗
-  </div>
-
-  <div class="fabItem" id="resetFab">
-    ↺
-  </div>
-
-</div>
+  
 
 <script src="bundle.js"></script>
 
@@ -504,57 +427,7 @@ document
     }, 800);
   });
 </script>
-<script>
-  const mainFab =
-  document.getElementById('mainFab');
-
-const items =
-  document.querySelectorAll('.fabItem');
-
-let open = false;
-
-mainFab.addEventListener('click', ()=>{
-
-  open = !open;
-
-  if(open){
-
-    items[0].style.transform =
-      'translate(-90px,-20px)';
-
-    items[1].style.transform =
-      'translate(90px,-20px)';
-
-    items[2].style.transform =
-      'translate(-40px,-100px)';
-
-    items[3].style.transform =
-      'translate(40px,-100px)';
-
-    items.forEach(i=>{
-
-      i.style.opacity='1';
-      i.style.pointerEvents='auto';
-
-    });
-
-  }
-
-  else{
-
-    items.forEach(i=>{
-
-      i.style.transform='translate(0,0)';
-      i.style.opacity='0';
-      i.style.pointerEvents='none';
-
-    });
-
-  }
-
-});
   
-</script>
   
 
 </body>
