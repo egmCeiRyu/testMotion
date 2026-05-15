@@ -35,12 +35,11 @@
 
 <style>
   
-#fabContainer {
+  #fabContainer {
 
   position: fixed;
 
-  bottom: calc(133px + env(safe-area-inset-bottom));
-
+  bottom: 140px;
   left: 50%;
 
   transform: translateX(-50%);
@@ -87,9 +86,8 @@
 
   pointer-events: none;
 
-  transition:
-    transform 0.3s ease,
-    opacity 0.3s ease;
+  transition: all 0.3s ease;
+
 }
   
   
@@ -105,14 +103,12 @@
 
   position: fixed;
 
-  bottom: calc(20px + env(safe-area-inset-bottom));
-
+  bottom: 30px;
   left: 50%;
 
   transform: translateX(-50%);
 
   display: flex;
-
   gap: 10px;
 
   z-index: 999;
@@ -142,19 +138,33 @@
 
 #captureBtn {
 
+  position: fixed !important;
+
+  top: 30px;
+  left: 20px;
+
   width: 58px;
   height: 58px;
 
   border-radius: 50%;
 
-  background: rgba(0,0,0,0.75);
+  border: none;
+
+  background: transparent;
+
+  z-index: 999999;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
+  padding: 0;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+
 }
+
 #captureIcon {
 
   color: red;
@@ -505,10 +515,10 @@ document
     if(open){
 
       items[0].style.transform =
-        'translate(-90px,0px)';
+        'translate(-90px,-50px)';
 
       items[1].style.transform =
-        'translate(90px,0px)';
+        'translate(90px,-50px)';
 
       items.forEach(i=>{
 
