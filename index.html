@@ -294,7 +294,7 @@ document
     }
 
     const image =
-      canvas.toDataURL('image/png');
+      canvas.toDataURL('image/jpeg',0.95)
 
     const link =
       document.createElement('a');
@@ -305,7 +305,26 @@ document
     link.download =
       'ar-photo.png';
 
-    link.click();
+    fetch(image)
+  .then(res => res.blob())
+  .then(blob => {
+
+    const file =
+      new File(
+        [blob],
+        'ar-photo.jpg',
+        { type:'image/jpeg' }
+      );
+
+    if(navigator.share){
+
+      navigator.share({
+        files:[file]
+      });
+
+    }
+
+  });
 
     // restaurar UI
     setTimeout(function(){
