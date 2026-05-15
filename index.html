@@ -34,6 +34,14 @@
 </script>
 
 <style>
+  
+/* Esconde qualquer branding da 8th Wall */
+  div[data-8thwall-branding],
+  .xrextras-branding,
+  img[src*="8thwall"],
+  div[style*="8thwall"] {
+    display: none !important;
+  }
 
 #colorMenu {
 
@@ -197,6 +205,8 @@
 
   xrextras-loading
   xrextras-runtime-error
+         
+  loading-screen="disabled: false; branding: false">
 
   renderer="colorManagement:true"
 
@@ -401,6 +411,22 @@ document
 });
 
 </script>
+  
+  <script>
+  // Força remoção após carregar
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('div, canvas + *').forEach(el => {
+        if (el.innerHTML && el.innerHTML.includes('8th Wall') || 
+            el.textContent.includes('Powered by')) {
+          el.style.display = 'none';
+        }
+      });
+    }, 800);
+  });
+</script>
+  
+  
 
 </body>
 </html>
