@@ -70,89 +70,11 @@
 
 <script src="bundle.js"></script>
 
-<!-- COLOR SCRIPT -->
-<script>
-
-window.addEventListener('load', function(){
-
-  const model =
-    document.getElementById('model');
-
-  document
-    .querySelectorAll('#colorMenu button')
-    .forEach(function(btn){
-
-      btn.addEventListener('click', function(){
-
-        const selectedColor =
-          btn.dataset.color;
-
-        model.object3D.traverse(function(obj){
-
-          if(
-            !obj.isMesh ||
-            !obj.material
-          ){
-            return;
-          }
-
-          obj.material.color.set(
-            selectedColor
-          );
-
-          obj.material.needsUpdate =
-            true;
-
-        });
-
-      });
-
-    });
-
-});
-
-</script>
-
 <div class="over">
 
   <span id="promptText">
-    画面をタップして配置
+    タップして配置
   </span>
-
-</div>
-
-<!-- COLOR MENU -->
-<div id="colorMenu">
-
-  <!-- Creme -->
-  <button
-    data-color="#d9d2c3"
-    style="background:#d9d2c3;">
-  </button>
-
-  <!-- Bege -->
-  <button
-    data-color="#bfa58a"
-    style="background:#bfa58a;">
-  </button>
-
-  <!-- Marrom claro -->
-  <button
-    data-color="#8b6f5a"
-    style="background:#8b6f5a;">
-  </button>
-
-  <!-- Marrom escuro -->
-  <button
-    data-color="#5c4435"
-    style="background:#5c4435;">
-  </button>
-
-  <!-- Preto -->
-  <button
-    data-color="#2f241d"
-    style="background:#2f241d;">
-  </button>
 
 </div>
 
@@ -256,7 +178,7 @@ window.addEventListener('load', function(){
   xrextras-two-finger-rotate
 
   xrextras-pinch-scale="
-    min:0.3;
+    min:0.1;
     max:1;
   "
 
