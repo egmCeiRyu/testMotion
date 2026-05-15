@@ -35,6 +35,9 @@
     data-preload-chunks="slam">
   </script>
 
+  <!-- Seu JS -->
+  <script src="./tap-place.js"></script>
+
   <style>
 
     html,
@@ -66,84 +69,34 @@
       pointer-events: none;
     }
 
+    #colorMenu {
+
+      position: fixed;
+
+      bottom: 30px;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      display: flex;
+      gap: 10px;
+
+      z-index: 999;
+
+    }
+
+    #colorMenu button {
+
+      width: 42px;
+      height: 42px;
+
+      border-radius: 50%;
+
+      border: 3px solid white;
+
+    }
+
   </style>
-
-  <script>
-
-    AFRAME.registerComponent('tap-place', {
-
-      init() {
-
-        const scene =
-          this.el
-
-        const model =
-          document.getElementById('model')
-
-        const ring =
-          document.getElementById('tapRing')
-
-        const prompt =
-          document.getElementById('promptText')
-
-        // =========================
-        // RING FOLLOW
-        // =========================
-
-        scene.addEventListener('mousemove', (event) => {
-
-          const intersection =
-            event.detail.intersection
-
-          if (!intersection) return
-
-          const point =
-            intersection.point
-
-          ring.object3D.visible = true
-
-          ring.object3D.position.copy(point)
-
-        })
-
-        // =========================
-        // TAP PLACE
-        // =========================
-
-        scene.addEventListener('click', (event) => {
-
-          const intersection =
-            event.detail.intersection
-
-          if (!intersection) return
-
-          const point =
-            intersection.point
-
-          model.object3D.position.copy(point)
-
-          model.setAttribute(
-            'visible',
-            'true'
-          )
-
-          // começa em 30%
-          model.object3D.scale.set(
-            0.3,
-            0.3,
-            0.3
-          )
-
-          prompt.style.display =
-            'none'
-
-        })
-
-      }
-
-    })
-
-  </script>
 
 </head>
 
@@ -152,6 +105,36 @@
   <!-- TEXTO -->
   <div id="promptText">
     タップして配置
+  </div>
+
+  <!-- MENU DE CORES -->
+  <div id="colorMenu">
+
+    <button
+      data-color="#d9d2c3"
+      style="background:#d9d2c3;">
+    </button>
+
+    <button
+      data-color="#bfa58a"
+      style="background:#bfa58a;">
+    </button>
+
+    <button
+      data-color="#8b6f5a"
+      style="background:#8b6f5a;">
+    </button>
+
+    <button
+      data-color="#5c4435"
+      style="background:#5c4435;">
+    </button>
+
+    <button
+      data-color="#2f241d"
+      style="background:#2f241d;">
+    </button>
+
   </div>
 
   <a-scene
@@ -176,15 +159,13 @@
 
       <a-asset-item
         id="houseModel"
-        src="house.glb">
+        src="./house.glb">
       </a-asset-item>
 
     </a-assets>
 
     <!-- CAMERA -->
     <a-camera
-
-      id="camera"
 
       position="0 1.6 0"
 
@@ -200,17 +181,16 @@
     >
     </a-camera>
 
-    <!-- LIGHT -->
-    <a-light
-      type="directional"
-      intensity="1.2"
-      position="1 3 2"
-      castShadow="true">
-    </a-light>
-
+    <!-- LUZ -->
     <a-light
       type="ambient"
       intensity="1">
+    </a-light>
+
+    <a-light
+      type="directional"
+      intensity="1.2"
+      position="1 3 2">
     </a-light>
 
     <!-- GROUND -->
@@ -226,13 +206,11 @@
       height="500"
 
       material="
-        shader:shadow;
+        opacity:0;
         transparent:true;
-        opacity:0.35;
       "
 
-      shadow>
-
+    >
     </a-plane>
 
     <!-- TAP RING -->
@@ -246,30 +224,26 @@
       radius-outer="0.22"
 
       material="
-        color:#ffffff;
-        opacity:0.9;
+        color:white;
         shader:flat;
       "
 
-      visible="true">
+      visible="false">
 
     </a-ring>
 
-    <!-- HOUSE -->
+    <!-- CASA -->
     <a-entity
 
       id="model"
 
-      visible="false"
-
       gltf-model="#houseModel"
+
+      visible="false"
 
       scale="1 1 1"
 
-      rotation="0 0 0"
-
-      shadow>
-
+    >
     </a-entity>
 
   </a-scene>
