@@ -3,20 +3,26 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+  <meta
+    name="viewport"
+    content="
+      width=device-width,
+      initial-scale=1,
+      maximum-scale=1,
+      user-scalable=no
+    "
+  />
 
   <title>House AR</title>
 
-  <!-- 8th Wall -->
-  <script src="//cdn.8thwall.com/web/aframe/8frame-1.4.1.min.js"></script>
-  <script src="//cdn.8thwall.com/web/xrextras/xrextras.js"></script>
-  <script src="//apps.8thwall.com/xrweb?appKey=YOUR_APP_KEY"></script>
+  <!-- 8th Wall Open Source -->
+  <script src="./external/8frame-1.4.1.min.js"></script>
 
-  <!-- AFRAME -->
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <!-- XR Extras -->
+  <script src="https://cdn.jsdelivr.net/npm/@8thwall/xrextras@latest/dist/xrextras.js"></script>
 
-  <!-- COMPONENT -->
+  <!-- Seu script -->
   <script src="tap-place.js"></script>
 
   <style>
@@ -27,8 +33,8 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: Arial, sans-serif;
       background: black;
+      font-family: Arial, sans-serif;
     }
 
     #promptText {
@@ -36,25 +42,32 @@
       bottom: 140px;
       left: 50%;
       transform: translateX(-50%);
+
       color: white;
       font-size: 24px;
       font-weight: bold;
+
       text-shadow: 0 0 10px black;
+
       z-index: 999;
+
       pointer-events: none;
     }
 
   </style>
+
 </head>
 
 <body>
 
-  <!-- TAP TEXT -->
+  <!-- TEXTO -->
   <div id="promptText">
     タップして配置
   </div>
 
   <a-scene
+
+    xrweb
 
     xrextras-loading
     xrextras-runtime-error
@@ -67,14 +80,14 @@
       antialias:true;
     "
 
-    xrweb>
+  >
 
     <!-- CAMERA -->
     <a-camera
       position="0 1.6 0">
     </a-camera>
 
-    <!-- LIGHT -->
+    <!-- LUZ -->
     <a-light
       type="directional"
       intensity="1.2"
@@ -86,31 +99,37 @@
       intensity="1">
     </a-light>
 
-    <!-- GROUND -->
+    <!-- CHÃO -->
     <a-plane
       id="ground"
       rotation="-90 0 0"
       width="500"
       height="500"
-      material="opacity:0; transparent:true"
+      material="
+        opacity:0;
+        transparent:true;
+      "
       shadow>
     </a-plane>
 
-    <!-- TAP RING -->
+    <!-- CIRCULO TAP -->
     <a-ring
       id="tapRing"
       rotation="-90 0 0"
+
       radius-inner="0.15"
       radius-outer="0.22"
+
       material="
         color:#ffffff;
         opacity:0.9;
         shader:flat;
       "
+
       visible="false">
     </a-ring>
 
-    <!-- HOUSE MODEL -->
+    <!-- CASA -->
     <a-entity
       id="model"
       visible="false"
