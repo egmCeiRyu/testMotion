@@ -295,60 +295,20 @@ o.innerHTML=`
     backdrop-filter:blur(8px);
   ">
 
-    <button
-      data-color="#d9d2c3"
-      style="
-        width:46px;
-        height:46px;
-        border-radius:50%;
-        border:3px solid white;
-        background:#d9d2c3;
-      ">
-    </button>
+    <button data-color="#d9d2c3"
+    style="width:46px;height:46px;border-radius:50%;border:3px solid white;background:#d9d2c3;"></button>
 
-    <button
-      data-color="#bfa58a"
-      style="
-        width:46px;
-        height:46px;
-        border-radius:50%;
-        border:3px solid white;
-        background:#bfa58a;
-      ">
-    </button>
+    <button data-color="#bfa58a"
+    style="width:46px;height:46px;border-radius:50%;border:3px solid white;background:#bfa58a;"></button>
 
-    <button
-      data-color="#8b6f5a"
-      style="
-        width:46px;
-        height:46px;
-        border-radius:50%;
-        border:3px solid white;
-        background:#8b6f5a;
-      ">
-    </button>
+    <button data-color="#8b6f5a"
+    style="width:46px;height:46px;border-radius:50%;border:3px solid white;background:#8b6f5a;"></button>
 
-    <button
-      data-color="#5c4435"
-      style="
-        width:46px;
-        height:46px;
-        border-radius:50%;
-        border:3px solid white;
-        background:#5c4435;
-      ">
-    </button>
+    <button data-color="#5c4435"
+    style="width:46px;height:46px;border-radius:50%;border:3px solid white;background:#5c4435;"></button>
 
-    <button
-      data-color="#2f241d"
-      style="
-        width:46px;
-        height:46px;
-        border-radius:50%;
-        border:3px solid white;
-        background:#2f241d;
-      ">
-    </button>
+    <button data-color="#2f241d"
+    style="width:46px;height:46px;border-radius:50%;border:3px solid white;background:#2f241d;"></button>
 
   </div>
 
@@ -436,10 +396,7 @@ if(e.object3D){
 var t=
 e.object3D.scale.x,
 
-n=
-Math.round(
-t/.35*100
-);
+n=Math.round(t*100);
 
 r.innerText=
 "Size: ".concat(
