@@ -396,7 +396,7 @@ if(e.object3D){
 var t=
 e.object3D.scale.x,
 
-n=Math.round(t*100);
+n=Math.round(t*1000);
 
 r.innerText=
 "Size: ".concat(
