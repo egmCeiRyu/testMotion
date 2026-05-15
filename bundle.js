@@ -390,8 +390,12 @@ t.material.name==="wall_mat" &&
 });
 
 setInterval(function(){
+  
+  
 
 if(e.object3D){
+  
+  console.log(e.object3D.scale.x)
 
 var t=
 e.object3D.scale.x,
