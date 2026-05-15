@@ -494,6 +494,51 @@ document
     }, 800);
   });
 </script>
+  
+<script>
+  const mainFab =
+  document.getElementById('mainFab');
+
+  const items =
+    document.querySelectorAll('.fabItem');
+
+  let open = false;
+
+  mainFab.addEventListener('click', ()=>{
+
+    open = !open;
+
+    if(open){
+
+      items[0].style.transform =
+        'translate(-90px,-20px)';
+
+      items[1].style.transform =
+        'translate(90px,-20px)';
+
+      items.forEach(i=>{
+
+        i.style.opacity='1';
+        i.style.pointerEvents='auto';
+
+      });
+
+    }
+
+    else{
+
+      items.forEach(i=>{
+
+        i.style.transform='translate(0,0)';
+        i.style.opacity='0';
+        i.style.pointerEvents='none';
+
+      });
+
+    }
+
+  });
+</script>
 
 </body>
 </html>
