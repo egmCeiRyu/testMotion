@@ -61,12 +61,64 @@
   border: 3px solid white;
 
 }
+  
+
+#captureBtn {
+
+  position: fixed !important;
+
+  top: 30px;
+  left: 20px;
+
+  width: 58px;
+  height: 58px;
+
+  border-radius: 50%;
+
+  border: none;
+
+  background: rgba(255,255,255,0.95);
+
+  z-index: 999999;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+
+}
+
+#captureIcon {
+
+  color: red;
+
+  font-size: 65px;
+
+  line-height: 1;
+
+  position: relative;
+
+  top: -3px;
+
+}
 
 </style>
 
 </head>
 
 <body>
+  
+<button id="captureBtn">
+
+  <span id="captureIcon">
+    ◉
+  </span>
+
+</button>
 
 <script src="bundle.js"></script>
 
@@ -206,6 +258,73 @@
 </a-box>
 
 </a-scene>
+  
+<script>
+
+document
+.getElementById('captureBtn')
+.addEventListener('click', function(){
+
+  // esconder UI
+  const colorMenu =
+    document.getElementById('colorMenu');
+
+  const scaleLabel =
+    document.getElementById('scaleLabel');
+
+  const captureBtn =
+    document.getElementById('captureBtn');
+
+  if(colorMenu)
+    colorMenu.style.display='none';
+
+  if(scaleLabel)
+    scaleLabel.style.display='none';
+
+  captureBtn.style.display='none';
+
+  // esperar render atualizar
+  setTimeout(function(){
+
+    const canvas =
+      document.querySelector('canvas');
+
+    if(!canvas){
+      return;
+    }
+
+    const image =
+      canvas.toDataURL('image/png');
+
+    const link =
+      document.createElement('a');
+
+    link.href =
+      image;
+
+    link.download =
+      'ar-photo.png';
+
+    link.click();
+
+    // restaurar UI
+    setTimeout(function(){
+
+      if(colorMenu)
+        colorMenu.style.display='flex';
+
+      if(scaleLabel)
+        scaleLabel.style.display='block';
+
+      captureBtn.style.display='flex';
+
+    },300);
+
+  },100);
+
+});
+
+</script>
 
 </body>
 </html>
