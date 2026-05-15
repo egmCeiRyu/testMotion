@@ -242,7 +242,7 @@
     </span>
   </div>
 
-  <div class="fabItem" id="videoFab">
+  <div class="fabItem" id="recordBtn">
     🎥
   </div>
 </div>
@@ -545,6 +545,72 @@ document
 
   });
 </script>
+  
+  //This script is related to the video camera
+  <script>
+    const recordBtn = document.getElementById('recordBtn');
+
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recording = false;
+
+    recordBtn.addEventListener('click', async () => {
+
+      const canvas = document.querySelector('canvas');
+
+      if (!recording) {
+
+        const stream = canvas.captureStream(30);
+
+        mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm'
+        });
+
+        recordedChunks = [];
+
+        mediaRecorder.ondataavailable = (e) => {
+
+          if (e.data.size > 0) {
+            recordedChunks.push(e.data);
+          }
+
+        };
+
+        mediaRecorder.onstop = () => {
+
+          const blob = new Blob(recordedChunks, {
+            type: 'video/webm'
+          });
+
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'ar-video.webm';
+          a.click();
+
+          URL.revokeObjectURL(url);
+
+        };
+
+        mediaRecorder.start();
+
+        recording = true;
+
+        recordBtn.innerText = 'STOP';
+
+      } else {
+
+        mediaRecorder.stop();
+
+        recording = false;
+
+        recordBtn.innerText = 'REC';
+
+      }
+
+    });
+  </script>
 
 </body>
 </html>
