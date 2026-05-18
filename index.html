@@ -343,7 +343,7 @@
 
   xrextras-pinch-scale="min:0.1;max:1;"
 
-  scale="1 1 1"
+  scale="0.1 0.1 0.1"
 
   rotation="0 0 0"
 
@@ -407,6 +407,9 @@
       y: placePos.y,
       z: placePos.z
     });
+
+    // Start at 10% — player grows with pinch up to 100%
+    model.setAttribute('scale', '0.1 0.1 0.1');
 
     model.setAttribute('visible', 'true');
 
@@ -570,6 +573,21 @@ window.addEventListener('load', function () {
 
   });
 
+})();
+</script>
+
+<!-- ══════════════════════════════════════
+     SCALE LABEL SYNC (top-right badge)
+     ══════════════════════════════════════ -->
+<script>
+(function () {
+  setInterval(function () {
+    var model = document.getElementById('model');
+    var badge = document.getElementById('scaleValue');
+    if (!model || !badge) return;
+    var s = model.object3D ? model.object3D.scale.x : 1;
+    badge.innerText = Math.round(s * 100) + '%';
+  }, 120);
 })();
 </script>
 
