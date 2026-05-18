@@ -34,66 +34,101 @@
 </script>
 
 <style>
-  
+
+  /* ── Target / crosshair overlay ── */
+  #targetOverlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 88888;
+    pointer-events: none; /* overlay itself is transparent to touches */
+  }
+
+  #targetBtn {
+    width: 90px;
+    height: 90px;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* subtle pulse to attract attention */
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* SVG crosshair drawn with CSS */
+  #targetBtn svg {
+    width: 90px;
+    height: 90px;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
+  }
+
+  #targetHint {
+    margin-top: 12px;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 8px black;
+    pointer-events: none;
+    text-align: center;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1);   opacity: 1;   }
+    50%       { transform: scale(1.1); opacity: 0.75; }
+  }
+
+  /* Hide after placement */
+  #targetOverlay.hidden {
+    display: none;
+  }
+
+  /* ── FAB ── */
   #fabContainer {
+    position: fixed;
+    bottom: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999;
+  }
 
-  position: fixed;
+  #mainFab {
+    width: 30px;
+    height: 39px;
+    border-radius: 50%;
+    border: none;
+    font-size: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
 
-  bottom: 140px;
-  left: 50%;
+  .fabItem {
+    position: absolute;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 0.1s ease,
+      opacity 0.3s ease;
+  }
 
-  transform: translateX(-50%);
-
-  z-index: 99999;
-
-}
-
-#mainFab {
-
-  width: 30px;
-  height: 39px;
-
-  border-radius: 50%;
-
-  border: none;
-
-  font-size: 20px;
-
-  background: #ffffff;
-
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-
-}
-
-.fabItem {
-
-  position: absolute;
-
-  width: 58px;
-  height: 58px;
-
-  border-radius: 50%;
-
-  background: rgba(255, 255, 255, 0.75);
-
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  opacity: 0;
-
-  pointer-events: none;
-
-  transition:
-    transform 0.1s ease,
-    opacity 0.3s ease;
-
-}
-  
-  
-/* Esconde qualquer branding da 8th Wall */
+  /* Hide 8th Wall branding */
   div[data-8thwall-branding],
   .xrextras-branding,
   img[src*="8thwall"],
@@ -101,175 +136,124 @@
     display: none !important;
   }
 
-#colorMenu {
+  #colorMenu {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 999;
+  }
 
-  position: fixed;
+  #colorMenu button {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    min-height: 42px;
+    aspect-ratio: 1 / 1;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    border: 3px solid white;
+    padding: 0;
+  }
 
-  bottom: 30px;
-  left: 50%;
+  #captureBtn {
+    position: fixed !important;
+    top: 30px;
+    left: 20px;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+  }
 
-  transform: translateX(-50%);
+  #captureIcon {
+    color: red;
+    font-size: 65px;
+    line-height: 1;
+    position: relative;
+    top: -1px;
+  }
 
-  display: flex;
-  gap: 10px;
-
-  z-index: 999;
-
-}
-
-#colorMenu button {
-
-  width: 42px;
-  height: 42px;
-
-  min-width: 42px;
-  min-height: 42px;
-
-  aspect-ratio: 1 / 1;
-
-  flex: 0 0 auto;
-
-  border-radius: 50%;
-
-  border: 3px solid white;
-
-  padding: 0;
-
-}
-  
-
-#captureBtn {
-
-  position: fixed !important;
-
-  top: 30px;
-  left: 20px;
-
-  width: 58px;
-  height: 58px;
-
-  border-radius: 50%;
-
-  border: none;
-
-  background: transparent;
-
-  z-index: 999999;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
-  box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-
-}
-
-#captureIcon {
-
-  color: red;
-
-  font-size: 65px;
-
-  line-height: 1;
-
-  position: relative;
-
-  top: -1px;
-
-}
-  
-#scaleLabel {
-
-  position: fixed;
-
-  top: 24px;
-  right: 20px;
-
-  padding: 10px 14px;
-
-  border-radius: 18px;
-
-  background: rgba(0,0,0,0.35);
-
-  backdrop-filter: blur(10px);
-
-  color: white;
-
-  font-family: Arial;
-
-  font-size: 18px;
-
-  font-weight: bold;
-
-  line-height: 1.2;
-
-  z-index: 9999;
-
-  text-align: center;
-
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-
-}
+  #scaleLabel {
+    position: fixed;
+    top: 24px;
+    right: 20px;
+    padding: 10px 14px;
+    border-radius: 18px;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-family: Arial;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 1.2;
+    z-index: 9999;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
 
 </style>
 
 </head>
 
 <body>
-  
-<!--
-<button id="captureBtn">
 
-  <span id="captureIcon">
-    ◉
-  </span>
+<!-- ══════════════════════════════════════
+     TARGET / CROSSHAIR — clique para colocar o modelo
+     ══════════════════════════════════════ -->
+<div id="targetOverlay">
 
-</button>
--->
-  
-<div id="fabContainer">
-
-  <button id="mainFab">
-    +
+  <button id="targetBtn" title="Tap to place model">
+    <!-- SVG crosshair -->
+    <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- outer circle -->
+      <circle cx="45" cy="45" r="38" stroke="white" stroke-width="2.5" stroke-opacity="0.9"/>
+      <!-- inner circle -->
+      <circle cx="45" cy="45" r="10" stroke="white" stroke-width="2.5" stroke-opacity="0.9"/>
+      <!-- center dot -->
+      <circle cx="45" cy="45" r="3" fill="white" fill-opacity="0.95"/>
+      <!-- top tick -->
+      <line x1="45" y1="7"  x2="45" y2="26" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- bottom tick -->
+      <line x1="45" y1="64" x2="45" y2="83" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- left tick -->
+      <line x1="7"  y1="45" x2="26" y2="45" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- right tick -->
+      <line x1="64" y1="45" x2="83" y2="45" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
   </button>
 
-  <div class="fabItem" id="captureBtn">
-    <span id="captureIcon">
-      ◉
-    </span>
-  </div>
+  <div id="targetHint">タップして配置 / Tap to place</div>
 
-  <div class="fabItem" id="recordBtn">
-    🎥
-  </div>
 </div>
-  
+
+<!-- FAB -->
+<div id="fabContainer">
+  <button id="mainFab">+</button>
+  <div class="fabItem" id="captureBtn">
+    <span id="captureIcon">◉</span>
+  </div>
+  <div class="fabItem" id="recordBtn">🎥</div>
+</div>
+
 <div id="scaleLabel">
-
-  <div style="
-    font-size:12px;
-    opacity:0.8;
-  ">
-    Scale
-  </div>
-
-  <div id="scaleValue">
-    100%
-  </div>
-
+  <div style="font-size:12px;opacity:0.8;">Scale</div>
+  <div id="scaleValue">100%</div>
 </div>
 
 <script src="bundle.js"></script>
 
 <div class="over">
-
-  <span id="promptText">
-    タップして配置
-  </span>
-
+  <span id="promptText" style="display:none;"></span>
 </div>
 
 <a-scene
@@ -299,14 +283,9 @@
 
 <a-assets>
 
-  <img
-    id="groundTex"
-    src="assets/sand.jpg">
+  <img id="groundTex" src="assets/sand.jpg">
 
-  <a-asset-item
-    id="cactusModel"
-    src="assets/cactus.glb">
-  </a-asset-item>
+  <a-asset-item id="cactusModel" src="assets/cactus.glb"></a-asset-item>
 
 </a-assets>
 
@@ -318,10 +297,7 @@
 
   raycaster="objects: .cantap"
 
-  cursor="
-    fuse:false;
-    rayOrigin:mouse;
-  "
+  cursor="fuse:false;rayOrigin:mouse;"
 
 >
 </a-camera>
@@ -341,10 +317,7 @@
     target:#model
   "
 
-  xrextras-attach="
-    target:model;
-    offset:8 15 4
-  "
+  xrextras-attach="target:model;offset:8 15 4"
 
   position="1 4.3 2.5"
 
@@ -352,10 +325,7 @@
 
 </a-entity>
 
-<a-light
-  type="ambient"
-  intensity="0.5">
-</a-light>
+<a-light type="ambient" intensity="0.5"></a-light>
 
 <a-entity
 
@@ -371,10 +341,7 @@
 
   xrextras-two-finger-rotate
 
-  xrextras-pinch-scale="
-    min:0.1;
-    max:1;
-  "
+  xrextras-pinch-scale="min:0.1;max:1;"
 
   scale="1 1 1"
 
@@ -400,217 +367,211 @@
 </a-box>
 
 </a-scene>
-  
+
+
+<!-- ══════════════════════════════════════
+     TARGET BUTTON — place model in front of camera
+     ══════════════════════════════════════ -->
 <script>
+(function () {
 
-document
-.getElementById('captureBtn')
-.addEventListener('click', function(){
+  var targetBtn     = document.getElementById('targetBtn');
+  var targetOverlay = document.getElementById('targetOverlay');
 
-  // esconder UI
-  const colorMenu =
-    document.getElementById('colorMenu');
+  targetBtn.addEventListener('click', function () {
 
-  const scaleLabel =
-    document.getElementById('scaleLabel');
+    var model  = document.getElementById('model');
+    var camera = document.getElementById('camera');
 
-  const captureBtn =
-    document.getElementById('captureBtn');
+    if (!model || !camera) return;
 
-  if(colorMenu)
-    colorMenu.style.display='none';
+    // ── compute a position 2 m in front of the camera ──
+    var camObj = camera.object3D;
 
-  if(scaleLabel)
-    scaleLabel.style.display='none';
+    // Direction the camera faces (local -Z in world space)
+    var THREE = AFRAME.THREE;
+    var direction = new THREE.Vector3(0, 0, -1);
+    direction.applyQuaternion(camObj.quaternion);
 
-  captureBtn.style.display='none';
+    var camPos = new THREE.Vector3();
+    camObj.getWorldPosition(camPos);
 
-  // esperar render atualizar
-  setTimeout(function(){
+    var distance = 2; // metres in front of camera
+    var placePos = camPos.clone().addScaledVector(direction, distance);
 
-    const canvas =
-      document.querySelector('canvas');
+    // Keep model at ground level (y = 0)
+    placePos.y = 0;
 
-    if(!canvas){
-      return;
-    }
+    model.setAttribute('position', {
+      x: placePos.x,
+      y: placePos.y,
+      z: placePos.z
+    });
 
-    const image =
-      canvas.toDataURL('image/jpeg',0.95)
+    model.setAttribute('visible', 'true');
 
-    const link =
-      document.createElement('a');
+    // Hide the overlay after placement
+    targetOverlay.classList.add('hidden');
 
-    link.href =
-      image;
+  });
 
-    link.download =
-      'ar-photo.png';
+})();
+</script>
+
+
+<!-- ══════════════════════════════════════
+     CAPTURE BUTTON
+     ══════════════════════════════════════ -->
+<script>
+document.getElementById('captureBtn').addEventListener('click', function () {
+
+  var colorMenu  = document.getElementById('colorMenu');
+  var scaleLabel = document.getElementById('scaleLabel');
+  var captureBtn = document.getElementById('captureBtn');
+
+  if (colorMenu)  colorMenu.style.display  = 'none';
+  if (scaleLabel) scaleLabel.style.display = 'none';
+  captureBtn.style.display = 'none';
+
+  setTimeout(function () {
+
+    var canvas = document.querySelector('canvas');
+    if (!canvas) return;
+
+    var image = canvas.toDataURL('image/jpeg', 0.95);
 
     fetch(image)
-  .then(res => res.blob())
-  .then(blob => {
+      .then(function (res) { return res.blob(); })
+      .then(function (blob) {
 
-    const file =
-      new File(
-        [blob],
-        'ar-photo.jpg',
-        { type:'image/jpeg' }
-      );
+        var file = new File([blob], 'ar-photo.jpg', { type: 'image/jpeg' });
 
-    if(navigator.share){
+        if (navigator.share) {
+          navigator.share({ files: [file] });
+        }
 
-      navigator.share({
-        files:[file]
       });
 
-    }
+    setTimeout(function () {
+      if (colorMenu)  colorMenu.style.display  = 'flex';
+      if (scaleLabel) scaleLabel.style.display = 'block';
+      captureBtn.style.display = 'flex';
+    }, 300);
 
-  });
-
-    // restaurar UI
-    setTimeout(function(){
-
-      if(colorMenu)
-        colorMenu.style.display='flex';
-
-      if(scaleLabel)
-        scaleLabel.style.display='block';
-
-      captureBtn.style.display='flex';
-
-    },300);
-
-  },100);
+  }, 100);
 
 });
+</script>
 
-</script>
-  
-  <script>
-  // Força remoção após carregar
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      document.querySelectorAll('div, canvas + *').forEach(el => {
-        if (el.innerHTML && el.innerHTML.includes('8th Wall') || 
-            el.textContent.includes('Powered by')) {
-          el.style.display = 'none';
-        }
-      });
-    }, 800);
-  });
-</script>
-  
+
+<!-- ══════════════════════════════════════
+     REMOVE 8th WALL BRANDING
+     ══════════════════════════════════════ -->
 <script>
-  const mainFab =
-  document.getElementById('mainFab');
+window.addEventListener('load', function () {
+  setTimeout(function () {
+    document.querySelectorAll('div, canvas + *').forEach(function (el) {
+      if ((el.innerHTML && el.innerHTML.includes('8th Wall')) ||
+           el.textContent.includes('Powered by')) {
+        el.style.display = 'none';
+      }
+    });
+  }, 800);
+});
+</script>
 
-  const items =
-    document.querySelectorAll('.fabItem');
 
-  let open = false;
+<!-- ══════════════════════════════════════
+     FAB MENU
+     ══════════════════════════════════════ -->
+<script>
+(function () {
 
-  mainFab.addEventListener('click', ()=>{
+  var mainFab = document.getElementById('mainFab');
+  var items   = document.querySelectorAll('.fabItem');
+  var open    = false;
+
+  mainFab.addEventListener('click', function () {
 
     open = !open;
 
-    if(open){
+    if (open) {
 
-      items[0].style.transform =
-        'translate(-130px,-40px)';
-
-      items[1].style.transform =
-        'translate(90px,-50px)';
-
-      items.forEach(i=>{
-
-        i.style.opacity='1';
-        i.style.pointerEvents='auto';
-
+      items[0].style.transform    = 'translate(-130px,-40px)';
+      items[1].style.transform    = 'translate(90px,-50px)';
+      items.forEach(function (i) {
+        i.style.opacity       = '1';
+        i.style.pointerEvents = 'auto';
       });
 
-    }
+    } else {
 
-    else{
-
-      items.forEach(i=>{
-
-        i.style.transform='translate(0,-40)';
-        i.style.opacity='0';
-        i.style.pointerEvents='none';
-
+      items.forEach(function (i) {
+        i.style.transform     = 'translate(0,-40px)';
+        i.style.opacity       = '0';
+        i.style.pointerEvents = 'none';
       });
 
     }
 
   });
+
+})();
 </script>
-  
-  //This script is related to the video camera
-  <script>
-    const recordBtn = document.getElementById('recordBtn');
 
-    let mediaRecorder;
-    let recordedChunks = [];
-    let recording = false;
 
-    recordBtn.addEventListener('click', async () => {
+<!-- ══════════════════════════════════════
+     VIDEO RECORDING
+     ══════════════════════════════════════ -->
+<script>
+(function () {
 
-      const canvas = document.querySelector('canvas');
+  var recordBtn      = document.getElementById('recordBtn');
+  var mediaRecorder;
+  var recordedChunks = [];
+  var recording      = false;
 
-      if (!recording) {
+  recordBtn.addEventListener('click', function () {
 
-        const stream = canvas.captureStream(30);
+    var canvas = document.querySelector('canvas');
 
-        mediaRecorder = new MediaRecorder(stream, {
-          mimeType: 'video/webm'
-        });
+    if (!recording) {
 
-        recordedChunks = [];
+      var stream = canvas.captureStream(30);
 
-        mediaRecorder.ondataavailable = (e) => {
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      recordedChunks = [];
 
-          if (e.data.size > 0) {
-            recordedChunks.push(e.data);
-          }
+      mediaRecorder.ondataavailable = function (e) {
+        if (e.data.size > 0) recordedChunks.push(e.data);
+      };
 
-        };
+      mediaRecorder.onstop = function () {
+        var blob = new Blob(recordedChunks, { type: 'video/webm' });
+        var url  = URL.createObjectURL(blob);
+        var a    = document.createElement('a');
+        a.href     = url;
+        a.download = 'ar-video.webm';
+        a.click();
+        URL.revokeObjectURL(url);
+      };
 
-        mediaRecorder.onstop = () => {
+      mediaRecorder.start();
+      recording         = true;
+      recordBtn.innerText = 'STOP';
 
-          const blob = new Blob(recordedChunks, {
-            type: 'video/webm'
-          });
+    } else {
 
-          const url = URL.createObjectURL(blob);
+      mediaRecorder.stop();
+      recording           = false;
+      recordBtn.innerText = '🎥';
 
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'ar-video.webm';
-          a.click();
+    }
 
-          URL.revokeObjectURL(url);
+  });
 
-        };
-
-        mediaRecorder.start();
-
-        recording = true;
-
-        recordBtn.innerText = 'STOP';
-
-      } else {
-
-        mediaRecorder.stop();
-
-        recording = false;
-
-        recordBtn.innerText = 'REC';
-
-      }
-
-    });
-  </script>
+})();
+</script>
 
 </body>
 </html>
