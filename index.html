@@ -7,16 +7,6 @@
 
 <meta
   name="viewport"
-  content="
-    width=device-width,
-    initial-scale=1,
-    maximum-scale=1,
-    user-scalable=no
-  "
->
-
-<meta
-  name="viewport"
   content="width=device-width,initial-scale=1">
 
 <title>AR Model Viewer</title>
@@ -46,15 +36,6 @@
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
 
 <style>
-
-  .plus-btn,
-  .menu-btn {
-    touch-action: manipulation;
-  }
-
-  body {
-  touch-action: manipulation;
-  }
 
   /* ── Target / crosshair overlay ── */
   #targetOverlay {
@@ -288,11 +269,7 @@
   xrextras-loading
   xrextras-runtime-error
 
-  renderer="
-  colorManagement:true;
-  physicallyCorrectLights:true;
-  shadowMapEnabled:true;
-  shadowMapType:PCFSoftShadowMap;"
+  renderer="colorManagement:true"
 
   xrweb="
     allowedDevices:any;
@@ -333,15 +310,13 @@
     type: directional;
     intensity: 0.8;
     castShadow: true;
-    shadowBias: -0.001;
-    shadowMapHeight: 2048;
-    shadowMapWidth: 2048;
-    shadowCameraTop: 50;
-    shadowCameraBottom: -50;
-    shadowCameraRight: 50;
-    shadowCameraLeft: -50;
-    shadowCameraNear: 1;
-    shadowCameraFar: 100; 
+    shadowBias: -0.002;
+    shadowMapHeight: 1024;
+    shadowMapWidth: 1024;
+    shadowCameraTop: 40;
+    shadowCameraBottom: -40;
+    shadowCameraRight: 40;
+    shadowCameraLeft: -40;
   "
   position="0 10 0">
 </a-entity>
@@ -380,7 +355,7 @@
 
   class="cantap"
 
-  scale="20 1 20"
+  scale="100 1 100"
 
   position="0 -0.1 0"
 
@@ -446,8 +421,6 @@
      ══════════════════════════════════════ -->
 <script>
 document.getElementById('captureBtn').addEventListener('click', function () {
-
-  requestCompassPermission()
 
   var colorMenu  = document.getElementById('colorMenu');
   var scaleLabel = document.getElementById('scaleLabel');
@@ -598,142 +571,55 @@ window.addEventListener('load', function () {
 </script>
 
 <script>
+    function initRealSun() {
 
-  let compassHeading = 0
-
-  async function requestCompassPermission() {
-
-    // iPhone
-    if (
-      typeof DeviceOrientationEvent !== 'undefined' &&
-      typeof DeviceOrientationEvent.requestPermission === 'function'
-    ) {
-
-      try {
-
-        const response =
-          await DeviceOrientationEvent.requestPermission()
-
-        if (response === 'granted') {
-
-          window.addEventListener(
-            'deviceorientation',
-            handleOrientation
-          )
-
-        }
-
-      } catch (e) {
-        console.log(e)
+      if (!navigator.geolocation) {
+        console.log('GPS not supported')
+        return
       }
 
-    }
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
 
-    // Android
-    else {
+          const lat = position.coords.latitude
+          const lon = position.coords.longitude
 
-      window.addEventListener(
-        'deviceorientationabsolute',
-        handleOrientation
+          updateSunLight(lat, lon)
+
+        },
+        (err) => {
+          console.log(err)
+        }
       )
-
     }
 
-  }
+    function updateSunLight(lat, lon) {
 
-  function handleOrientation(event) {
+      const now = new Date()
 
-    if (event.webkitCompassHeading) {
+      const sunPos = SunCalc.getPosition(now, lat, lon)
 
-      // iPhone
-      compassHeading = event.webkitCompassHeading
+      const altitude = sunPos.altitude
+      const azimuth = sunPos.azimuth
 
-    } else if (event.alpha !== null) {
+      const distance = 20
 
-      // Android
-      compassHeading = 360 - event.alpha
+      const x = -Math.sin(azimuth) * distance
+      const z = -Math.cos(azimuth) * distance
+      const y = Math.sin(altitude) * distance
 
+      const sun = document.getElementById('sunLight')
+
+      if (sun) {
+        sun.setAttribute('position', `${x} ${y} ${z}`)
+      }
+
+      console.log('SUN POSITION:', x, y, z)
     }
 
-    console.log('COMPASS:', compassHeading)
-
-  }
-
-</script>
-
-<script>
-
-function initRealSun() {
-
-  if (!navigator.geolocation) {
-    return
-  }
-
-  if (sun) {
-
-  sun.setAttribute(
-    'position',
-    '10 15 8'
-  )
-
-}
-
-  navigator.geolocation.getCurrentPosition(function(position) {
-
-    const lat = position.coords.latitude
-    const lon = position.coords.longitude
-
-    updateSunLight(lat, lon)
-
-  })
-
-}
-
-function updateSunLight(lat, lon) {
-
-  const now = new Date()
-
-  const sunPos = SunCalc.getPosition(now, lat, lon)
-
-  const altitude = sunPos.altitude
-  const azimuth = sunPos.azimuth
-
-  const distance = 20
-
-  const x = -Math.sin(azimuth) * distance
-  const z = -Math.cos(azimuth) * distance
-  const y = Math.max(
-    Math.sin(altitude) * distance,
-    8
-  )
-
-  const sun = document.getElementById('sunLight')
-
-  if (!sun) return
-
-  sun.setAttribute(
-    'position',
-    `${x} ${y} ${z}`
-  )
-
-  console.log('SUN:', x, y, z)
-
-}
-
-window.addEventListener('load', function() {
-  initRealSun()
-})
-
-</script>
-
-<script>
-  const plusBtn = document.getElementById('plusBtn')
-
-  plusBtn.addEventListener('touchend', (e) => {
-    e.preventDefault()
-
-    menu.classList.toggle('active')
-  })
+    window.addEventListener('load', () => {
+      initRealSun()
+    })
 </script>
 
 </body>
