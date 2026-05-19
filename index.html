@@ -37,54 +37,6 @@
 
 <style>
 
-  /* MENU SOL VERTICAL */
-  #sunMenu {
-    position: fixed;
-    top: 15px;
-    left: 24px;
-    z-index: 999999;
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-  
-  #sunMenu.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .sunBtn {
-    width: 71px;
-    height: 76px;
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  .sunBtn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-
-  .timeFab {
-  overflow: hidden;
-  padding: 0;
-  }
-
-  .timeFab img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 29%;
-    pointer-events: none;
-  }
-
   /* ── Target / crosshair overlay ── */
   #targetOverlay {
     position: fixed;
@@ -283,39 +235,6 @@
 </head>
 
 <body>
-  
-  <div id="debugHeading"
-     style="
-      position:fixed;
-      top:100px;
-      left:20px;
-      z-index:999999;
-      color:white;
-      background:rgba(0,0,0,.6);
-      padding:8px;
-      font-size:14px;">
-</div>
-
-    <!-- MENU SOL -->
-  <div id="sunMenu">
-
-    <button class="sunBtn" id="morningBtn">
-      <img src="ui/asa.png">
-    </button>
-
-    <button class="sunBtn" id="noonBtn">
-      <img src="ui/hiru.png">
-    </button>
-
-    <button class="sunBtn" id="eveningBtn">
-      <img src="ui/yuugata.png">
-    </button>
-
-    <button class="sunBtn" id="nowBtn">
-      <img src="ui/ima.png">
-    </button>
-
-  </div>
 
 <!-- ══════════════════════════════════════
      TARGET / CROSSHAIR — clique para colocar o modelo
@@ -489,27 +408,6 @@
   var targetOverlay = document.getElementById('targetOverlay');
 
   targetBtn.addEventListener('click', function () {
-    
-    //---------------------------------------------------------apagar
-    const camera = document.getElementById('camera')
-
-    const yaw =
-      camera.object3D.rotation.y
-    
-    window.sessionYaw = yaw
-
-    document.getElementById('debugHeading').innerHTML =
-  'Yaw: ' +
-  document.getElementById('debugHeading').innerHTML +
-  '<br>Compass: ' +
-  compassHeading.toFixed(1)
-    
-    
-    
-    //-------------------------------------------------------apagar
-    
-    
-    requestCompassPermission();
 
     var model  = document.getElementById('model');
     var camera = document.getElementById('camera');
@@ -619,43 +517,28 @@ window.addEventListener('load', function () {
 (function () {
 
   var mainFab = document.getElementById('mainFab');
-
-  var captureBtn = document.getElementById('captureBtn');
-  var recordBtn  = document.getElementById('recordBtn');
-  var sunMenu = document.getElementById('sunMenu');
-
-  var open = false;
+  var items   = document.querySelectorAll('.fabItem');
+  var open    = false;
 
   mainFab.addEventListener('click', function () {
 
     open = !open;
 
     if (open) {
-      
-      // MOSTRA MENU SOL
-      sunMenu.classList.add('open');
 
-      // POSIÇÕES ORIGINAIS
-      captureBtn.style.transform = 'translate(-130px,-40px)';
-      recordBtn.style.transform  = 'translate(90px,-50px)';
-
-      [captureBtn, recordBtn].forEach(function (btn) {
-
-        btn.style.opacity = '1';
-        btn.style.pointerEvents = 'auto';
-
+      items[0].style.transform    = 'translate(-130px,-40px)';
+      items[1].style.transform    = 'translate(90px,-50px)';
+      items.forEach(function (i) {
+        i.style.opacity       = '1';
+        i.style.pointerEvents = 'auto';
       });
 
     } else {
-      
-      sunMenu.classList.remove('open');
 
-      [captureBtn, recordBtn].forEach(function (btn) {
-
-        btn.style.transform = 'translate(0,-40px)';
-        btn.style.opacity = '0';
-        btn.style.pointerEvents = 'none';
-
+      items.forEach(function (i) {
+        i.style.transform     = 'translate(0,-40px)';
+        i.style.opacity       = '0';
+        i.style.pointerEvents = 'none';
       });
 
     }
@@ -734,46 +617,8 @@ window.addEventListener('load', function () {
 
 })();
 </script>
-  
-  <script>
-    async function requestCompassPermission() {
-
-  if (
-    typeof DeviceOrientationEvent !== 'undefined' &&
-    typeof DeviceOrientationEvent.requestPermission === 'function'
-  ) {
-
-    try {
-
-      const result =
-        await DeviceOrientationEvent.requestPermission()
-
-      console.log('Compass permission:', result)
-
-    } catch (e) {
-
-      console.log(e)
-
-    }
-
-  }
-
-}
-  </script>
 
 <script>
-  
-  let compassHeading = 0
-
-  window.addEventListener('deviceorientation', function (event) {
-
-  if (event.webkitCompassHeading !== undefined) {
-
-    compassHeading = event.webkitCompassHeading
-
-  }
-
-})
     function initRealSun() {
 
       if (!navigator.geolocation) {
@@ -805,16 +650,7 @@ window.addEventListener('load', function () {
       const sunPos = SunCalc.getPosition(now, lat, lon)
 
       const altitude = sunPos.altitude
-      const headingRad = compassHeading * Math.PI / 180
-      
-      const sessionYaw =
-      window.sessionYaw || 0
-
-      const azimuth =
-      sunPos.azimuth -
-      sessionYaw +
-      0.15 -
-      headingRad
+      const azimuth = sunPos.azimuth -offset + 0.32
 
       const distance = 40
 
@@ -834,80 +670,6 @@ window.addEventListener('load', function () {
     window.addEventListener('load', () => {
       initRealSun()
     })
-</script>
-
-<script>
-  (function () {
-
-    function setSunTime(hours, minutes) {
-
-      navigator.geolocation.getCurrentPosition((position) => {
-
-        const lat = position.coords.latitude
-        const lon = position.coords.longitude
-
-        const customDate = new Date()
-
-        customDate.setHours(hours)
-        customDate.setMinutes(minutes)
-        customDate.setSeconds(0)
-
-        const offset = Math.PI / 2
-
-        const sunPos = SunCalc.getPosition(customDate, lat, lon)
-
-        const altitude = sunPos.altitude
-
-        const headingRad =
-          compassHeading * Math.PI / 180
-
-        const azimuth =
-          sunPos.azimuth -
-          offset +
-          0.15 -
-          headingRad
-
-        const distance = 40
-
-        const x = -Math.sin(azimuth) * distance
-        const z = -Math.cos(azimuth) * distance
-        const y =  Math.sin(altitude) * distance
-
-        const sun = document.getElementById('sunLight')
-
-        if (sun) {
-          sun.setAttribute('position', `${x} ${y} ${z}`)
-        }
-
-      })
-
-    }
-
-    // 朝
-    document.getElementById('morningBtn')
-      .addEventListener('click', () => {
-        setSunTime(7, 0)
-      })
-
-    // 昼
-    document.getElementById('noonBtn')
-      .addEventListener('click', () => {
-        setSunTime(12, 0)
-      })
-
-    // 今
-    document.getElementById('nowBtn')
-      .addEventListener('click', () => {
-        initRealSun()
-      })
-
-    // 夕方
-    document.getElementById('eveningBtn')
-      .addEventListener('click', () => {
-        setSunTime(17, 30)
-      })
-
-  })();
 </script>
 
 </body>
