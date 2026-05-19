@@ -489,15 +489,23 @@
   var targetOverlay = document.getElementById('targetOverlay');
 
   targetBtn.addEventListener('click', function () {
+    
     //---------------------------------------------------------apagar
     const camera = document.getElementById('camera')
 
     const yaw =
       camera.object3D.rotation.y
+    
+    window.sessionYaw = yaw
 
     document.getElementById('debugHeading').innerHTML =
       'Yaw: ' + yaw.toFixed(3)
+    
+    
+    
     //-------------------------------------------------------apagar
+    
+    
     requestCompassPermission();
 
     var model  = document.getElementById('model');
@@ -803,9 +811,9 @@ window.addEventListener('load', function () {
       const headingRad = compassHeading * Math.PI / 180
 
       const azimuth =
-        sunPos.azimuth -
-        offset +
-        0.15 -
+  sunPos.azimuth -
+  window.sessionYaw +
+  0.15 -
         headingRad5
 
       const distance = 40
