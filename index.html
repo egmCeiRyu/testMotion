@@ -370,8 +370,8 @@
   xrextras-loading
   xrextras-runtime-error
 
-  renderer="colorManagement:true"
-
+  renderer="colorManagement:true; shadowMap:true; shadowMapType:1"
+  shadow="type: pcf"
   xrweb="
     allowedDevices:any;
     defaultEnvironmentFogIntensity:0.5;
@@ -412,8 +412,8 @@
     intensity: 0.8;
     castShadow: true;
     shadowBias: -0.0005;
-    shadowMapHeight: 2048;
-    shadowMapWidth: 2048;
+    shadowMapHeight: 1024;
+    shadowMapWidth: 1024;
     shadowCameraTop: 20;
     shadowCameraBottom: -20;
     shadowCameraRight: 20;
@@ -460,7 +460,9 @@
 
   position="0 -0.1 0"
 
-  visible="false">
+  visible="false"
+  
+  shadow="cast: false; receive: true">
 
 </a-box>
 
@@ -822,6 +824,26 @@ window.addEventListener('load', function () {
   })();
 </script>
 
+<script>
+    document.querySelector('a-scene').addEventListener('renderstart', function () {
+      const renderer = this.renderer;
+
+      if (!renderer) return;
+
+      // Força shadow map compatível com Safari/iOS WebGL
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFShadowMap; // tipo 1, compatível
+
+      // Força todos os objetos a atualizarem sombras
+      this.object3D.traverse(function (node) {
+        if (node.isMesh) {
+          node.castShadow    = true;
+          node.receiveShadow = true;
+          node.material.needsUpdate = true;
+        }
+      });
+    });
+</script>
 
 </body>
 </html>
