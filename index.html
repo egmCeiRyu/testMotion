@@ -40,17 +40,25 @@
   /* MENU SOL VERTICAL */
   #sunMenu {
     position: fixed;
-    top: 34px;
+    top: 15px;
     left: 24px;
     z-index: 999999;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  
+  #sunMenu.open {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .sunBtn {
     width: 71px;
-    height: 80px;
+    height: 76px;
     border: none;
     background: transparent;
     padding: 0;
@@ -338,26 +346,6 @@
       <polygon points="16,10 21,7 21,17 16,14"/>
     </svg>
   </div>
-    <!-- MANHÃ -->
-  <div class="fabItem timeFab" id="morningBtn">
-    <img src="asa.png">
-  </div>
-
-  <!-- MEIO DIA -->
-  <div class="fabItem timeFab" id="noonBtn">
-    <img src="hiru.png">
-  </div>
-
-  <!-- TARDE -->
-  <div class="fabItem timeFab" id="eveningBtn">
-    <img src="yuugata.png">
-  </div>
-
-    <!-- AGORA -->
-  <div class="fabItem timeFab" id="nowBtn">
-    <img src="ima.png">
-  </div>
-
 </div>
 
 <div id="scaleLabel">
@@ -601,6 +589,7 @@ window.addEventListener('load', function () {
 
   var captureBtn = document.getElementById('captureBtn');
   var recordBtn  = document.getElementById('recordBtn');
+  var sunMenu = document.getElementById('sunMenu');
 
   var open = false;
 
@@ -609,6 +598,9 @@ window.addEventListener('load', function () {
     open = !open;
 
     if (open) {
+      
+      // MOSTRA MENU SOL
+      sunMenu.classList.add('open');
 
       // POSIÇÕES ORIGINAIS
       captureBtn.style.transform = 'translate(-130px,-40px)';
