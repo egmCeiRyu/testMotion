@@ -129,7 +129,7 @@
     box-shadow:
     0 4px 12px rgba(0,0,0,0.18);
 
-    border:
+  border:
     1px solid rgba(255,255,255,0.5);
     transition:
       transform 0.1s ease,
@@ -220,6 +220,14 @@
     z-index: 9999;
     text-align: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  #recordBtn.recording{
+    background:#ff3b30;
+  }
+
+  #recordBtn.recording .videoIcon{
+    stroke:white;
   }
 
 </style>
@@ -560,33 +568,49 @@ window.addEventListener('load', function () {
 
       var stream = canvas.captureStream(30);
 
-      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+      mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'video/webm'
+      });
+
       recordedChunks = [];
 
       mediaRecorder.ondataavailable = function (e) {
-        if (e.data.size > 0) recordedChunks.push(e.data);
+        if (e.data.size > 0) {
+          recordedChunks.push(e.data);
+        }
       };
 
       mediaRecorder.onstop = function () {
-        var blob = new Blob(recordedChunks, { type: 'video/webm' });
-        var url  = URL.createObjectURL(blob);
-        var a    = document.createElement('a');
-        a.href     = url;
+
+        var blob = new Blob(recordedChunks, {
+          type: 'video/webm'
+        });
+
+        var url = URL.createObjectURL(blob);
+
+        var a = document.createElement('a');
+
+        a.href = url;
         a.download = 'ar-video.webm';
+
         a.click();
+
         URL.revokeObjectURL(url);
       };
 
       mediaRecorder.start();
-      recording         = true;
-      recordBtn.innerText = 'STOP';
+
+      recording = true;
+
+      recordBtn.classList.add('recording');
 
     } else {
 
       mediaRecorder.stop();
-      recording           = false;
-      recordBtn.innerText = '🎥';
 
+      recording = false;
+
+      recordBtn.classList.remove('recording');
     }
 
   });
