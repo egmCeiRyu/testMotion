@@ -130,6 +130,31 @@
       opacity 0.3s ease;
   }
 
+    .video-icon{
+    width: 26px;
+    height: 18px;
+
+    background: white;
+    border-radius: 6px;
+
+    position: relative;
+  }
+
+  .video-icon::after{
+    content: '';
+
+    position: absolute;
+    right: -8px;
+    top: 4px;
+
+    width: 0;
+    height: 0;
+
+    border-left: 10px solid white;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+
   /* Hide 8th Wall branding */
   div[data-8thwall-branding],
   .xrextras-branding,
@@ -244,7 +269,9 @@
   <div class="fabItem" id="captureBtn">
     <span id="captureIcon">◉</span>
   </div>
-  <div class="fabItem" id="recordBtn">🎥</div>
+  <div class="fabItem" id="recordBtn">
+    <div class="video-icon"></div>
+  </div>
 </div>
 
 <div id="scaleLabel">
