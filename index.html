@@ -7,6 +7,16 @@
 
 <meta
   name="viewport"
+  content="
+    width=device-width,
+    initial-scale=1,
+    maximum-scale=1,
+    user-scalable=no
+  "
+>
+
+<meta
+  name="viewport"
   content="width=device-width,initial-scale=1">
 
 <title>AR Model Viewer</title>
@@ -36,6 +46,15 @@
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
 
 <style>
+
+  .plus-btn,
+  .menu-btn {
+    touch-action: manipulation;
+  }
+
+  body {
+  touch-action: manipulation;
+  }
 
   /* ── Target / crosshair overlay ── */
   #targetOverlay {
@@ -622,6 +641,16 @@ window.addEventListener('load', function () {
     window.addEventListener('load', () => {
       initRealSun()
     })
+</script>
+
+<script>
+  const plusBtn = document.getElementById('plusBtn')
+
+  plusBtn.addEventListener('touchend', (e) => {
+    e.preventDefault()
+
+    menu.classList.toggle('active')
+  })
 </script>
 
 </body>
