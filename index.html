@@ -477,6 +477,8 @@
   var targetOverlay = document.getElementById('targetOverlay');
 
   targetBtn.addEventListener('click', function () {
+    
+    requestCompassPermission();
 
     var model  = document.getElementById('model');
     var camera = document.getElementById('camera');
@@ -701,6 +703,32 @@ window.addEventListener('load', function () {
 
 })();
 </script>
+  
+  <script>
+    async function requestCompassPermission() {
+
+  if (
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof DeviceOrientationEvent.requestPermission === 'function'
+  ) {
+
+    try {
+
+      const result =
+        await DeviceOrientationEvent.requestPermission()
+
+      console.log('Compass permission:', result)
+
+    } catch (e) {
+
+      console.log(e)
+
+    }
+
+  }
+
+}
+  </script>
 
 <script>
   
