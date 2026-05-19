@@ -395,7 +395,22 @@ setInterval(function(){
 
 if(e.object3D){
   
-  console.log(e.object3D.scale.x)
+  e.object3D.traverse(function(mesh){
+
+  if(mesh.isMesh){
+
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    if(mesh.material){
+
+      mesh.material.needsUpdate = true;
+
+    }
+
+  }
+
+});
 
 var t=
 e.object3D.scale.x,
