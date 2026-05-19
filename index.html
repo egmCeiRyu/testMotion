@@ -729,6 +729,15 @@ window.addEventListener('load', function () {
       'shadowRadius:3;'
     );
 
+    if (sun) {
+
+      sun.setAttribute(
+        'position',
+        '10 15 8'
+      )
+
+    }
+
     console.log('☀️ sunAz=' + sunAzDeg.toFixed(1) + '° compass=' + (compassHeading||0).toFixed(1) + '° relAz=' + (relAz*180/Math.PI).toFixed(1) + '°');
   }
 
