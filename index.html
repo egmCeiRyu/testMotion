@@ -37,6 +37,33 @@
 
 <style>
 
+  /* MENU SOL VERTICAL */
+  #sunMenu {
+    position: fixed;
+    top: 34px;
+    left: 14px;
+    z-index: 999999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .sunBtn {
+    width: 54px;
+    height: 54px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .sunBtn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
   .timeFab {
   overflow: hidden;
   padding: 0;
@@ -249,6 +276,27 @@
 
 <body>
 
+    <!-- MENU SOL -->
+  <div id="sunMenu">
+
+    <button class="sunBtn" id="morningBtn">
+      <img src="ui/asa.png">
+    </button>
+
+    <button class="sunBtn" id="noonBtn">
+      <img src="ui/hiru.png">
+    </button>
+
+    <button class="sunBtn" id="eveningBtn">
+      <img src="ui/yuugata.png">
+    </button>
+
+    <button class="sunBtn" id="nowBtn">
+      <img src="ui/ima.png">
+    </button>
+
+  </div>
+
 <!-- ══════════════════════════════════════
      TARGET / CROSSHAIR — clique para colocar o modelo
      ══════════════════════════════════════ -->
@@ -309,7 +357,7 @@
   <div class="fabItem timeFab" id="nowBtn">
     <img src="ima.png">
   </div>
-  
+
 </div>
 
 <div id="scaleLabel">
@@ -547,72 +595,47 @@ window.addEventListener('load', function () {
      FAB MENU
      ══════════════════════════════════════ -->
 <script>
-  (function () {
+(function () {
 
-    var mainFab = document.getElementById('mainFab');
+  var mainFab = document.getElementById('mainFab');
 
-    var captureBtn = document.getElementById('captureBtn');
-    var recordBtn  = document.getElementById('recordBtn');
+  var captureBtn = document.getElementById('captureBtn');
+  var recordBtn  = document.getElementById('recordBtn');
 
-    var morningBtn = document.getElementById('morningBtn');
-    var noonBtn    = document.getElementById('noonBtn');
-    var nowBtn     = document.getElementById('nowBtn');
-    var eveningBtn = document.getElementById('eveningBtn');
+  var open = false;
 
-    var open = false;
+  mainFab.addEventListener('click', function () {
 
-    mainFab.addEventListener('click', function () {
+    open = !open;
 
-      open = !open;
+    if (open) {
 
-      if (open) {
+      // POSIÇÕES ORIGINAIS
+      captureBtn.style.transform = 'translate(-130px,-40px)';
+      recordBtn.style.transform  = 'translate(90px,-50px)';
 
-        // POSIÇÕES ORIGINAIS
-        captureBtn.style.transform = 'translate(-130px,-40px)';
-        recordBtn.style.transform  = 'translate(90px,-50px)';
+      [captureBtn, recordBtn].forEach(function (btn) {
 
-        // NOVOS BOTÕES
-        morningBtn.style.transform = 'translate(-110px,-140px)';
-        noonBtn.style.transform    = 'translate(0px,-190px)';
-        nowBtn.style.transform     = 'translate(110px,-140px)';
-        eveningBtn.style.transform = 'translate(0px,-100px)';
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
 
-        [
-          captureBtn,
-          recordBtn,
-          morningBtn,
-          noonBtn,
-          nowBtn,
-          eveningBtn
-        ].forEach(function (btn) {
+      });
 
-          btn.style.opacity = '1';
-          btn.style.pointerEvents = 'auto';
+    } else {
 
-        });
+      [captureBtn, recordBtn].forEach(function (btn) {
 
-      } else {
+        btn.style.transform = 'translate(0,-40px)';
+        btn.style.opacity = '0';
+        btn.style.pointerEvents = 'none';
 
-        [
-          captureBtn,
-          recordBtn,
-          morningBtn,
-          noonBtn,
-          nowBtn,
-          eveningBtn
-        ].forEach(function (btn) {
+      });
 
-          btn.style.transform = 'translate(0,-40px)';
-          btn.style.opacity = '0';
-          btn.style.pointerEvents = 'none';
+    }
 
-        });
+  });
 
-      }
-
-    });
-
-  })();
+})();
 </script>
 
 
@@ -737,6 +760,72 @@ window.addEventListener('load', function () {
     window.addEventListener('load', () => {
       initRealSun()
     })
+</script>
+
+<script>
+  (function () {
+
+    function setSunTime(hours, minutes) {
+
+      navigator.geolocation.getCurrentPosition((position) => {
+
+        const lat = position.coords.latitude
+        const lon = position.coords.longitude
+
+        const customDate = new Date()
+
+        customDate.setHours(hours)
+        customDate.setMinutes(minutes)
+        customDate.setSeconds(0)
+
+        const offset = Math.PI / 2
+
+        const sunPos = SunCalc.getPosition(customDate, lat, lon)
+
+        const altitude = sunPos.altitude
+        const azimuth  = sunPos.azimuth - offset + 0.32
+
+        const distance = 40
+
+        const x = -Math.sin(azimuth) * distance
+        const z = -Math.cos(azimuth) * distance
+        const y =  Math.sin(altitude) * distance
+
+        const sun = document.getElementById('sunLight')
+
+        if (sun) {
+          sun.setAttribute('position', `${x} ${y} ${z}`)
+        }
+
+      })
+
+    }
+
+    // 朝
+    document.getElementById('morningBtn')
+      .addEventListener('click', () => {
+        setSunTime(7, 0)
+      })
+
+    // 昼
+    document.getElementById('noonBtn')
+      .addEventListener('click', () => {
+        setSunTime(12, 0)
+      })
+
+    // 今
+    document.getElementById('nowBtn')
+      .addEventListener('click', () => {
+        initRealSun()
+      })
+
+    // 夕方
+    document.getElementById('eveningBtn')
+      .addEventListener('click', () => {
+        setSunTime(17, 30)
+      })
+
+  })();
 </script>
 
 </body>
