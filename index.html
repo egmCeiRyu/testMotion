@@ -320,7 +320,7 @@
     target:#model
   "
 
-  xrextras-attach="target:model;offset:8 15 4"
+  <!-- xrextras-attach="target:model;offset:8 15 4" -->
 
   position="0 10 0"
 
@@ -611,8 +611,8 @@ window.addEventListener('load', function () {
 
       const distance = 20
 
-      const x = Math.cos(azimuth) * distance
-      const z = Math.sin(azimuth) * distance
+      const x = -Math.sin(azimuth) * distance
+      const z = -Math.cos(azimuth) * distance
       const y = Math.sin(altitude) * distance
 
       const sun = document.getElementById('sunLight')
