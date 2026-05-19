@@ -662,86 +662,68 @@ window.addEventListener('load', function () {
 </script>
 
 <script>
-  function initRealSun() {
-    if (!navigator.geolocation) return;
 
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var lat = position.coords.latitude;
-      var lon = position.coords.longitude;
+function initRealSun() {
 
-      // Pega orientação da bússola
-      window.addEventListener('deviceorientationabsolute', function(e) {
-        updateSunLight(lat, lon, e.alpha); // alpha = graus do Norte magnético
-      }, true);
-
-      // Fallback se deviceorientationabsolute não disparar
-      window.addEventListener('deviceorientation', function(e) {
-        if (e.absolute) updateSunLight(lat, lon, e.alpha);
-      }, true);
-
-      // Atualiza posição do sol a cada 60s
-      setInterval(function() { updateSunLight(lat, lon, window._lastHeading || 0); }, 60000);
-    });
+  if (!navigator.geolocation) {
+    return
   }
 
-  function updateSunLight(lat, lon, compassHeading) {
-    var now     = new Date();
-    var sunPos  = SunCalc.getPosition(now, lat, lon);
+  if (sun) {
 
-    var altitude = sunPos.altitude;
-    var azimuth =
-  sunPos.azimuth +
-  (compassHeading * Math.PI / 180) // radianos, ref Sul
+  sun.setAttribute(
+    'position',
+    '10 15 8'
+  )
 
-    // Salva o último heading conhecido
-    window._lastHeading = compassHeading || 0;
+}
 
-    // Converte azimute solar para graus geográficos (0=Norte)
-    var sunAzDeg = (azimuth * 180 / Math.PI + 180) % 360; // graus do Norte
+  navigator.geolocation.getCurrentPosition(function(position) {
 
-    // Subtrai o heading da câmera para alinhar ao espaço AR
-    var relAz = (sunAzDeg - (compassHeading || 0)) * Math.PI / 180;
+    const lat = position.coords.latitude
+    const lon = position.coords.longitude
 
-    var distance = 50;
-    var x = -Math.sin(relAz) * distance;
-    var z = -Math.cos(relAz) * distance;
-    var y =  Math.sin(altitude) * distance;
+    updateSunLight(lat, lon)
 
-    var sun = document.getElementById('sunLight');
-    if (!sun) return;
+  })
 
-    sun.setAttribute('position', x + ' ' + y + ' ' + z);
+}
 
-    var intensity = Math.max(0, Math.sin(altitude));
-    sun.setAttribute('light',
-      'type:directional;' +
-      'intensity:' + (0.3 + intensity * 1.2).toFixed(2) + ';' +
-      'castShadow:true;' +
-      'shadowBias:-0.0005;' +
-      'shadowMapHeight:2048;' +
-      'shadowMapWidth:2048;' +
-      'shadowCameraTop:15;' +
-      'shadowCameraBottom:-15;' +
-      'shadowCameraRight:15;' +
-      'shadowCameraLeft:-15;' +
-      'shadowCameraNear:0.5;' +
-      'shadowCameraFar:50;' +
-      'shadowRadius:3;'
-    );
+function updateSunLight(lat, lon) {
 
-    if (sun) {
+  const now = new Date()
 
-      sun.setAttribute(
-        'position',
-        '10 15 8'
-      )
+  const sunPos = SunCalc.getPosition(now, lat, lon)
 
-    }
+  const altitude = sunPos.altitude
+  const azimuth = sunPos.azimuth
 
-    console.log('☀️ sunAz=' + sunAzDeg.toFixed(1) + '° compass=' + (compassHeading||0).toFixed(1) + '° relAz=' + (relAz*180/Math.PI).toFixed(1) + '°');
-  }
+  const distance = 20
 
-  window.addEventListener('load', function() { initRealSun(); });
+  const x = -Math.sin(azimuth) * distance
+  const z = -Math.cos(azimuth) * distance
+  const y = Math.max(
+    Math.sin(altitude) * distance,
+    8
+  )
+
+  const sun = document.getElementById('sunLight')
+
+  if (!sun) return
+
+  sun.setAttribute(
+    'position',
+    `${x} ${y} ${z}`
+  )
+
+  console.log('SUN:', x, y, z)
+
+}
+
+window.addEventListener('load', function() {
+  initRealSun()
+})
+
 </script>
 
 <script>
