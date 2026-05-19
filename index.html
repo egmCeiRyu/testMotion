@@ -478,6 +478,7 @@
 
   targetBtn.addEventListener('click', function () {
     
+    captureSessionYaw(); 
     requestCompassPermission();
 
     var model  = document.getElementById('model');
@@ -729,155 +730,98 @@ window.addEventListener('load', function () {
 
 }
   </script>
-
 <script>
-  
-  let compassHeading = 0
+  /* ── BÚSSOLA ── */
+  let compassHeading = 0;
 
-  window.addEventListener('deviceorientation', function (event) {
+  window.addEventListener('deviceorientation', function (e) {
+    if (e.webkitCompassHeading !== undefined) {
+      // iOS: 0 = Norte, aumenta no sentido horário
+      compassHeading = e.webkitCompassHeading;
+    } else if (e.absolute && e.alpha !== null) {
+      // Android absolute: converte para mesma convenção
+      compassHeading = (360 - e.alpha) % 360;
+    }
+  }, true);
 
-  if (event.webkitCompassHeading !== undefined) {
-
-    compassHeading = event.webkitCompassHeading
-
+  /* ── sessionYaw: captura o yaw da câmera na hora do placement ──
+     Chamado pelo targetBtn click (já existe no seu código).
+     Guarda para onde o A-Frame aponta como "frente" na sessão.   */
+  function captureSessionYaw() {
+    const camera = document.getElementById('camera');
+    if (!camera) return;
+    const euler = new AFRAME.THREE.Euler();
+    euler.setFromQuaternion(camera.object3D.quaternion, 'YXZ');
+    window.sessionYaw = euler.y; // radianos, yaw da câmera no momento do placement
   }
 
-})
-    function initRealSun() {
+  /* ── Cálculo da posição do sol ── */
+  function computeSunPosition(date, lat, lon) {
+    const sunPos  = SunCalc.getPosition(date, lat, lon);
+    const altitude = sunPos.altitude;           // radianos, elevação acima do horizonte
+    const azimuthNorth = sunPos.azimuth + Math.PI; // SunCalc: sul=0 → norte=0 (corrige)
 
-      if (!navigator.geolocation) {
-        console.log('GPS not supported')
-        return
-      }
+    /* 
+      azimuthNorth: ângulo a partir do NORTE geográfico, sentido horário (radianos)
+      compassHeading: para onde o dispositivo aponta no mundo real (graus, 0=Norte)
+      sessionYaw: para onde a câmera A-Frame aponta na sessão (radianos)
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
+      Para alinhar o sol no espaço 3D do A-Frame com o mundo real:
+        ângulo no A-Frame = azimuth_sol - compassHeading_rad + sessionYaw
+    */
+    const compassRad  = compassHeading * Math.PI / 180;
+    const angleInScene = azimuthNorth - compassRad + (window.sessionYaw || 0);
 
-          const lat = position.coords.latitude
-          const lon = position.coords.longitude
+    const distance = 40;
+    const x =  Math.sin(angleInScene) * distance;
+    const z = -Math.cos(angleInScene) * distance;
+    const y =  Math.sin(altitude)     * distance;
 
-          updateSunLight(lat, lon)
+    return { x, y, z };
+  }
 
-        },
-        (err) => {
-          console.log(err)
-        }
-      )
+  function applySunPosition(pos) {
+    const sun = document.getElementById('sunLight');
+    if (sun) {
+      sun.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
+      console.log('☀️ Sol:', pos);
     }
+  }
 
-    function updateSunLight(lat, lon) {
+  /* ── GPS → sol atual ── */
+  function initRealSun() {
+    if (!navigator.geolocation) { console.log('GPS não suportado'); return; }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const p = computeSunPosition(new Date(), pos.coords.latitude, pos.coords.longitude);
+        applySunPosition(p);
+      },
+      (err) => console.log(err)
+    );
+  }
 
-      const offset = Math.PI/2
+  /* ── Hora manual ── */
+  function setSunTime(hours, minutes) {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const date = new Date();
+      date.setHours(hours, minutes, 0);
+      const p = computeSunPosition(date, pos.coords.latitude, pos.coords.longitude);
+      applySunPosition(p);
+    });
+  }
 
-      const now = new Date()
-
-      const sunPos = SunCalc.getPosition(now, lat, lon)
-
-      const altitude = sunPos.altitude
-      const headingRad = compassHeading * Math.PI / 180
-      
-      const sessionYaw =
-      window.sessionYaw || 0
-
-      const azimuth =
-      sunPos.azimuth -
-      sessionYaw +
-      0.15 -
-      headingRad
-
-      const distance = 40
-
-      const x = -Math.sin(azimuth) * distance
-      const z = -Math.cos(azimuth) * distance
-      const y = Math.sin(altitude) * distance 
-
-      const sun = document.getElementById('sunLight')
-
-      if (sun) {
-        sun.setAttribute('position', `${x} ${y} ${z}`)
-      }
-
-      console.log('SUN POSITION:', x, y, z)
-    }
-
-    window.addEventListener('load', () => {
-      initRealSun()
-    })
+  window.addEventListener('load', () => { initRealSun(); });
 </script>
 
 <script>
   (function () {
-
-    function setSunTime(hours, minutes) {
-
-      navigator.geolocation.getCurrentPosition((position) => {
-
-        const lat = position.coords.latitude
-        const lon = position.coords.longitude
-
-        const customDate = new Date()
-
-        customDate.setHours(hours)
-        customDate.setMinutes(minutes)
-        customDate.setSeconds(0)
-
-        const offset = Math.PI / 2
-
-        const sunPos = SunCalc.getPosition(customDate, lat, lon)
-
-        const altitude = sunPos.altitude
-
-        const sessionYaw =
-          window.sessionYaw || 0
-
-        const azimuth =
-          sunPos.azimuth -
-          sessionYaw +
-          0.15 -
-          headingRad
-
-        const distance = 40
-
-        const x = -Math.sin(azimuth) * distance
-        const z = -Math.cos(azimuth) * distance
-        const y =  Math.sin(altitude) * distance
-
-        const sun = document.getElementById('sunLight')
-
-        if (sun) {
-          sun.setAttribute('position', `${x} ${y} ${z}`)
-        }
-
-      })
-
-    }
-
-    // 朝
-    document.getElementById('morningBtn')
-      .addEventListener('click', () => {
-        setSunTime(7, 0)
-      })
-
-    // 昼
-    document.getElementById('noonBtn')
-      .addEventListener('click', () => {
-        setSunTime(12, 0)
-      })
-
-    // 今
-    document.getElementById('nowBtn')
-      .addEventListener('click', () => {
-        initRealSun()
-      })
-
-    // 夕方
-    document.getElementById('eveningBtn')
-      .addEventListener('click', () => {
-        setSunTime(17, 30)
-      })
-
+    document.getElementById('morningBtn').addEventListener('click', () => setSunTime(7, 0));
+    document.getElementById('noonBtn')   .addEventListener('click', () => setSunTime(12, 0));
+    document.getElementById('eveningBtn').addEventListener('click', () => setSunTime(17, 30));
+    document.getElementById('nowBtn')    .addEventListener('click', () => initRealSun());
   })();
 </script>
+
 
 </body>
 </html>
