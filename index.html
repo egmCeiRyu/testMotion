@@ -283,6 +283,18 @@
 </head>
 
 <body>
+  
+  <div id="debugHeading"
+     style="
+      position:fixed;
+      top:100px;
+      left:20px;
+      z-index:999999;
+      color:white;
+      background:rgba(0,0,0,.6);
+      padding:8px;
+      font-size:14px;">
+</div>
 
     <!-- MENU SOL -->
   <div id="sunMenu">
@@ -477,7 +489,15 @@
   var targetOverlay = document.getElementById('targetOverlay');
 
   targetBtn.addEventListener('click', function () {
-    
+    //---------------------------------------------------------apagar
+    const camera = document.getElementById('camera')
+
+    const yaw =
+      camera.object3D.rotation.y
+
+    document.getElementById('debugHeading').innerHTML =
+      'Yaw: ' + yaw.toFixed(3)
+    //-------------------------------------------------------apagar
     requestCompassPermission();
 
     var model  = document.getElementById('model');
