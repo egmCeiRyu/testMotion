@@ -370,7 +370,7 @@
   xrextras-loading
   xrextras-runtime-error
 
-  renderer="colorManagement:true; shadowMap:true; shadowMapType:1"
+  renderer="colorManagement:true; shadowMap:true; shadowMapType:1; antialias:false"
   shadow="type: pcf"
   xrweb="
     allowedDevices:any;
@@ -451,19 +451,13 @@
 </a-entity>
 
 <a-box
-
   id="ground"
-
   class="cantap"
-
   scale="20 1 20"
-
   position="0 -0.1 0"
-
-  visible="false"
-  
+  visible="true"
+  material="color: #ffffff; transparent: true; opacity: 0.0001; depthWrite: false"
   shadow="cast: false; receive: true">
-
 </a-box>
 
 </a-scene>
@@ -731,7 +725,8 @@ window.addEventListener('load', function () {
   }
 
 }
-  </script>
+</script>
+  
 <script>
   /* ── BÚSSOLA ── */
   let compassHeading = 0;
@@ -825,25 +820,50 @@ window.addEventListener('load', function () {
 </script>
 
 <script>
-    document.querySelector('a-scene').addEventListener('renderstart', function () {
-      const renderer = this.renderer;
+(function () {
 
-      if (!renderer) return;
+  const scene = document.querySelector('a-scene');
 
-      // Força shadow map compatível com Safari/iOS WebGL
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFShadowMap; // tipo 1, compatível
+  /* ── 1. Configura o renderer assim que ele existe ── */
+  scene.addEventListener('renderstart', function () {
 
-      // Força todos os objetos a atualizarem sombras
-      this.object3D.traverse(function (node) {
+    const renderer = this.renderer;
+    if (!renderer) return;
+
+    // USA AFRAME.THREE, não THREE global
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type    = AFRAME.THREE.PCFShadowMap; // ← CORRIGIDO
+
+    // Safari/iOS: preserva o buffer para compositing correto
+    renderer.getContext().canvas.setAttribute('preserveDrawingBuffer', 'true');
+
+  });
+
+  /* ── 2. Força sombras no modelo DEPOIS que o GLTF carregou ── */
+  scene.addEventListener('loaded', function () {
+
+    const model = document.getElementById('model');
+    if (!model) return;
+
+    // Escuta o evento de load do componente gltf-model
+    model.addEventListener('model-loaded', function () {
+
+      model.object3D.traverse(function (node) {
         if (node.isMesh) {
           node.castShadow    = true;
           node.receiveShadow = true;
-          node.material.needsUpdate = true;
+          if (node.material) node.material.needsUpdate = true;
         }
       });
-    });
-</script>
 
+      console.log('✅ Sombras aplicadas ao modelo');
+    });
+
+  });
+
+})();
+</script>
+  
+  
 </body>
 </html>
