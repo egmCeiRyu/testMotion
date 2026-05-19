@@ -34,6 +34,44 @@
 </script>
 
 <style>
+  #sunMenu{
+
+  position:fixed;
+
+  bottom:220px;
+  left:50%;
+
+  transform:translateX(-50%);
+
+  display:none;
+
+  gap:10px;
+
+  z-index:99999;
+
+  background:rgba(0,0,0,0.35);
+
+  backdrop-filter:blur(10px);
+
+  padding:12px;
+
+  border-radius:22px;
+
+}
+
+#sunMenu button{
+
+  border:none;
+
+  padding:12px 16px;
+
+  border-radius:14px;
+
+  background:white;
+
+  font-weight:bold;
+
+}
   
   #fabContainer {
 
@@ -219,16 +257,7 @@
 </head>
 
 <body>
-  
-<!--
-<button id="captureBtn">
 
-  <span id="captureIcon">
-    ◉
-  </span>
-
-</button>
--->
   
 <div id="fabContainer">
 
@@ -245,6 +274,27 @@
   <div class="fabItem" id="recordBtn">
     🎥
   </div>
+
+  <div class="fabItem" id="sunBtn">
+     ☀
+  </div>
+</div>
+
+<!-- MENU SOLAR -->
+<div id="sunMenu">
+
+  <button data-time="morning">
+    Morning
+  </button>
+
+  <button data-time="noon">
+    Noon
+  </button>
+
+  <button data-time="evening">
+    Evening
+  </button>
+
 </div>
   
 <div id="scaleLabel">
@@ -327,7 +377,7 @@
 </a-camera>
 
 <a-entity
-
+  id="sunLight"
   light="
     type:directional;
     intensity:0.8;
@@ -608,6 +658,25 @@ document
         recordBtn.innerText = 'REC';
 
       }
+
+    });
+  </script>
+  
+  <script>
+    const sunBtn =
+    document.getElementById('sunBtn');
+
+    const sunMenu =
+    document.getElementById('sunMenu');
+
+    let sunOpen = false;
+
+    sunBtn.addEventListener('click', ()=>{
+
+      sunOpen = !sunOpen;
+
+      sunMenu.style.display =
+        sunOpen ? 'flex' : 'none';
 
     });
   </script>
