@@ -34,65 +34,45 @@
 </script>
 
 <style>
+  #sunMenu{
 
-  /* ── Target / crosshair overlay ── */
-  #targetOverlay {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 88888;
-    pointer-events: none; /* overlay itself is transparent to touches */
-  }
+  position:fixed;
 
-  #targetBtn {
-    width: 90px;
-    height: 90px;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    pointer-events: auto;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* subtle pulse to attract attention */
-    animation: pulse 2s ease-in-out infinite;
-  }
+  bottom:220px;
+  left:50%;
 
-  /* SVG crosshair drawn with CSS */
-  #targetBtn svg {
-    width: 90px;
-    height: 90px;
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
-  }
+  transform:translateX(-50%);
 
-  #targetHint {
-    margin-top: 12px;
-    color: white;
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    font-weight: bold;
-    letter-spacing: 0.08em;
-    text-shadow: 0 0 8px black;
-    pointer-events: none;
-    text-align: center;
-  }
+  display:none;
 
-  @keyframes pulse {
-    0%, 100% { transform: scale(1);   opacity: 1;   }
-    50%       { transform: scale(1.1); opacity: 0.75; }
-  }
+  gap:10px;
 
-  /* Hide after placement */
-  #targetOverlay.hidden {
-    display: none;
-  }
+  z-index:99999;
 
-  /* ── FAB ── */
+  background:rgba(0,0,0,0.35);
+
+  backdrop-filter:blur(10px);
+
+  padding:12px;
+
+  border-radius:22px;
+
+}
+
+#sunMenu button{
+
+  border:none;
+
+  padding:12px 16px;
+
+  border-radius:14px;
+
+  background:white;
+
+  font-weight:bold;
+
+}
+  
   #fabContainer {
     position: fixed;
     bottom: 140px;
@@ -207,32 +187,38 @@
 
 <body>
 
-<!-- ══════════════════════════════════════
-     TARGET / CROSSHAIR — clique para colocar o modelo
-     ══════════════════════════════════════ -->
-<div id="targetOverlay">
+  
+<div id="fabContainer">
 
-  <button id="targetBtn" title="Tap to place model">
-    <!-- SVG crosshair -->
-    <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- outer circle -->
-      <circle cx="45" cy="45" r="38" stroke="white" stroke-width="2.5" stroke-opacity="0.9"/>
-      <!-- inner circle -->
-      <circle cx="45" cy="45" r="10" stroke="white" stroke-width="2.5" stroke-opacity="0.9"/>
-      <!-- center dot -->
-      <circle cx="45" cy="45" r="3" fill="white" fill-opacity="0.95"/>
-      <!-- top tick -->
-      <line x1="45" y1="7"  x2="45" y2="26" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- bottom tick -->
-      <line x1="45" y1="64" x2="45" y2="83" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- left tick -->
-      <line x1="7"  y1="45" x2="26" y2="45" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- right tick -->
-      <line x1="64" y1="45" x2="83" y2="45" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-    </svg>
+  <button id="mainFab">
+    +
   </button>
 
   <div id="targetHint">タップして配置 / Tap to place</div>
+
+  <div class="fabItem" id="recordBtn">
+    🎥
+  </div>
+
+  <div class="fabItem" id="sunBtn">
+     ☀
+  </div>
+</div>
+
+<!-- MENU SOLAR -->
+<div id="sunMenu">
+
+  <button data-time="morning">
+    Morning
+  </button>
+
+  <button data-time="noon">
+    Noon
+  </button>
+
+  <button data-time="evening">
+    Evening
+  </button>
 
 </div>
 
@@ -303,7 +289,7 @@
 </a-camera>
 
 <a-entity
-
+  id="sunLight"
   light="
     type:directional;
     intensity:0.8;
@@ -570,8 +556,45 @@ window.addEventListener('load', function () {
 
   });
 
-})();
-</script>
+        };
+
+        mediaRecorder.start();
+
+        recording = true;
+
+        recordBtn.innerText = 'STOP';
+
+      } else {
+
+        mediaRecorder.stop();
+
+        recording = false;
+
+        recordBtn.innerText = 'REC';
+
+      }
+
+    });
+  </script>
+  
+  <script>
+    const sunBtn =
+    document.getElementById('sunBtn');
+
+    const sunMenu =
+    document.getElementById('sunMenu');
+
+    let sunOpen = false;
+
+    sunBtn.addEventListener('click', ()=>{
+
+      sunOpen = !sunOpen;
+
+      sunMenu.style.display =
+        sunOpen ? 'flex' : 'none';
+
+    });
+  </script>
 
 </body>
 </html>
