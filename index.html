@@ -651,9 +651,11 @@ window.addEventListener('load', function () {
 
       var stream = canvas.captureStream(30);
 
-      mediaRecorder = new MediaRecorder(stream, {
-        mimeType: 'video/webm'
-      });
+      // Detecta formato suportado pelo aparelho
+      var mimeType = MediaRecorder.isTypeSupported('video/mp4')  ? 'video/mp4'  :
+                     MediaRecorder.isTypeSupported('video/webm') ? 'video/webm' : '';
+
+      mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType: mimeType } : {});
 
       recordedChunks = [];
 
@@ -665,35 +667,30 @@ window.addEventListener('load', function () {
 
       mediaRecorder.onstop = function () {
 
-        var blob = new Blob(recordedChunks, {
-          type: 'video/webm'
-        });
+        var type = mediaRecorder.mimeType || 'video/webm';
+        var ext  = type.includes('mp4') ? 'mp4' : 'webm';
 
-        var url = URL.createObjectURL(blob);
+        var blob = new Blob(recordedChunks, { type: type });
+        var url  = URL.createObjectURL(blob);
 
         var a = document.createElement('a');
-
-        a.href = url;
-        a.download = 'ar-video.webm';
-
+        a.href     = url;
+        a.download = 'ar-video.' + ext;
         a.click();
 
         URL.revokeObjectURL(url);
       };
 
       mediaRecorder.start();
-
       recording = true;
-
       recordBtn.classList.add('recording');
 
     } else {
 
       mediaRecorder.stop();
-
       recording = false;
-
       recordBtn.classList.remove('recording');
+
     }
 
   });
@@ -825,20 +822,22 @@ window.addEventListener('load', function () {
   const scene = document.querySelector('a-scene');
 
   /* ── 1. Configura o renderer assim que ele existe ── */
-  scene.addEventListener('renderstart', function () {
+    scene.addEventListener('renderstart', function () {
+      const renderer = this.renderer;
+      if (!renderer) return;
 
-    const renderer = this.renderer;
-    if (!renderer) return;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type    = AFRAME.THREE.PCFShadowMap;
 
-    // USA AFRAME.THREE, não THREE global
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type    = AFRAME.THREE.PCFShadowMap; // ← CORRIGIDO
-
-    // Safari/iOS: preserva o buffer para compositing correto
-    renderer.getContext().canvas.setAttribute('preserveDrawingBuffer', 'true');
-
-  });
-
+      // Ajusta shadowBias conforme WebGL version
+      const isWebGL2 = renderer.capabilities.isWebGL2;
+      const sun = document.getElementById('sunLight');
+      if (sun) {
+        const bias = isWebGL2 ? -0.0005 : -0.002;
+        sun.setAttribute('light', 'shadowBias', bias);
+        console.log('WebGL' + (isWebGL2 ? '2' : '1') + ' shadowBias:', bias);
+      }
+    });
   /* ── 2. Força sombras no modelo DEPOIS que o GLTF carregou ── */
   scene.addEventListener('loaded', function () {
 
