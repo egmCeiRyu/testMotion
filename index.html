@@ -703,6 +703,17 @@ window.addEventListener('load', function () {
 </script>
 
 <script>
+  
+  let compassHeading = 0
+
+  window.addEventListener('deviceorientation', function (event) {
+
+    if (event.webkitCompassHeading !== undefined) {
+      compassHeading = event.webkitCompassHeading
+    }
+
+  })
+  
     function initRealSun() {
 
       if (!navigator.geolocation) {
@@ -777,7 +788,15 @@ window.addEventListener('load', function () {
         const sunPos = SunCalc.getPosition(customDate, lat, lon)
 
         const altitude = sunPos.altitude
-        const azimuth  = sunPos.azimuth - offset + 0.32
+
+        const headingRad =
+          compassHeading * Math.PI / 180
+
+        const azimuth =
+          sunPos.azimuth -
+          offset +
+          0.15 -
+          headingRad
 
         const distance = 40
 
