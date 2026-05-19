@@ -595,14 +595,14 @@ window.addEventListener('load', function () {
 
     function updateSunLight(lat, lon) {
 
-      const offset = -Math.PI
+      const offset = Math.PI/2
 
       const now = new Date()
 
       const sunPos = SunCalc.getPosition(now, lat, lon)
 
       const altitude = sunPos.altitude
-      const azimuth =sunPos.azimuth + offset
+      const azimuth = sunPos.azimuth -offset
 
       const distance = 40
 
