@@ -33,6 +33,8 @@
   data-preload-chunks="slam">
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+
 <style>
 
   /* ── Target / crosshair overlay ── */
@@ -303,7 +305,7 @@
 </a-camera>
 
 <a-entity
-
+   id="sunLight";
   light="
     type:directional;
     intensity:0.8;
@@ -320,7 +322,7 @@
 
   xrextras-attach="target:model;offset:8 15 4"
 
-  position="1 4.3 2.5"
+  position="0 10 0"
 
   shadow>
 
@@ -573,6 +575,58 @@ window.addEventListener('load', function () {
   });
 
 })();
+</script>
+
+<script>
+    function initRealSun() {
+
+      if (!navigator.geolocation) {
+        console.log('GPS not supported')
+        return
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+
+          const lat = position.coords.latitude
+          const lon = position.coords.longitude
+
+          updateSunLight(lat, lon)
+
+        },
+        (err) => {
+          console.log(err)
+        }
+      )
+    }
+
+    function updateSunLight(lat, lon) {
+
+      const now = new Date()
+
+      const sunPos = SunCalc.getPosition(now, lat, lon)
+
+      const altitude = sunPos.altitude
+      const azimuth = sunPos.azimuth
+
+      const distance = 20
+
+      const x = Math.cos(azimuth) * distance
+      const z = Math.sin(azimuth) * distance
+      const y = Math.sin(altitude) * distance
+
+      const sun = document.getElementById('sunLight')
+
+      if (sun) {
+        sun.setAttribute('position', `${x} ${y} ${z}`)
+      }
+
+      console.log('SUN POSITION:', x, y, z)
+    }
+
+    window.addEventListener('load', () => {
+      initRealSun()
+    })
 </script>
 
 </body>
