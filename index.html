@@ -311,8 +311,8 @@
     intensity: 0.8;
     castShadow: true;
     shadowBias: -0.0005;
-    shadowMapHeight: 1024;
-    shadowMapWidth: 1024;
+    shadowMapHeight: 2048;
+    shadowMapWidth: 2048;
     shadowCameraTop: 20;
     shadowCameraBottom: -20;
     shadowCameraRight: 20;
@@ -595,18 +595,20 @@ window.addEventListener('load', function () {
 
     function updateSunLight(lat, lon) {
 
+      const offset = Math.PI
+
       const now = new Date()
 
       const sunPos = SunCalc.getPosition(now, lat, lon)
 
       const altitude = sunPos.altitude
-      const azimuth = sunPos.azimuth
+      const azimuth =sunPos.azimuth + offset
 
       const distance = 40
 
       const x = -Math.sin(azimuth) * distance
       const z = -Math.cos(azimuth) * distance
-      const y = Math.sin(altitude) * distance * 0.7
+      const y = Math.sin(altitude) * distance 
 
       const sun = document.getElementById('sunLight')
 
