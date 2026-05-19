@@ -37,6 +37,19 @@
 
 <style>
 
+  .timeFab {
+  overflow: hidden;
+  padding: 0;
+  }
+
+  .timeFab img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
   /* ── Target / crosshair overlay ── */
   #targetOverlay {
     position: fixed;
@@ -277,6 +290,26 @@
       <polygon points="16,10 21,7 21,17 16,14"/>
     </svg>
   </div>
+    <!-- MANHÃ -->
+  <div class="fabItem timeFab" id="morningBtn">
+    <img src="asa.png">
+  </div>
+
+  <!-- MEIO DIA -->
+  <div class="fabItem timeFab" id="noonBtn">
+    <img src="hiru.png">
+  </div>
+
+  <!-- TARDE -->
+  <div class="fabItem timeFab" id="eveningBtn">
+    <img src="yuugata.png">
+  </div>
+
+    <!-- AGORA -->
+  <div class="fabItem timeFab" id="nowBtn">
+    <img src="ima.png">
+  </div>
+  
 </div>
 
 <div id="scaleLabel">
@@ -514,38 +547,72 @@ window.addEventListener('load', function () {
      FAB MENU
      ══════════════════════════════════════ -->
 <script>
-(function () {
+  (function () {
 
-  var mainFab = document.getElementById('mainFab');
-  var items   = document.querySelectorAll('.fabItem');
-  var open    = false;
+    var mainFab = document.getElementById('mainFab');
 
-  mainFab.addEventListener('click', function () {
+    var captureBtn = document.getElementById('captureBtn');
+    var recordBtn  = document.getElementById('recordBtn');
 
-    open = !open;
+    var morningBtn = document.getElementById('morningBtn');
+    var noonBtn    = document.getElementById('noonBtn');
+    var nowBtn     = document.getElementById('nowBtn');
+    var eveningBtn = document.getElementById('eveningBtn');
 
-    if (open) {
+    var open = false;
 
-      items[0].style.transform    = 'translate(-130px,-40px)';
-      items[1].style.transform    = 'translate(90px,-50px)';
-      items.forEach(function (i) {
-        i.style.opacity       = '1';
-        i.style.pointerEvents = 'auto';
-      });
+    mainFab.addEventListener('click', function () {
 
-    } else {
+      open = !open;
 
-      items.forEach(function (i) {
-        i.style.transform     = 'translate(0,-40px)';
-        i.style.opacity       = '0';
-        i.style.pointerEvents = 'none';
-      });
+      if (open) {
 
-    }
+        // POSIÇÕES ORIGINAIS
+        captureBtn.style.transform = 'translate(-130px,-40px)';
+        recordBtn.style.transform  = 'translate(90px,-50px)';
 
-  });
+        // NOVOS BOTÕES
+        morningBtn.style.transform = 'translate(-110px,-140px)';
+        noonBtn.style.transform    = 'translate(0px,-190px)';
+        nowBtn.style.transform     = 'translate(110px,-140px)';
+        eveningBtn.style.transform = 'translate(0px,-100px)';
 
-})();
+        [
+          captureBtn,
+          recordBtn,
+          morningBtn,
+          noonBtn,
+          nowBtn,
+          eveningBtn
+        ].forEach(function (btn) {
+
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+
+        });
+
+      } else {
+
+        [
+          captureBtn,
+          recordBtn,
+          morningBtn,
+          noonBtn,
+          nowBtn,
+          eveningBtn
+        ].forEach(function (btn) {
+
+          btn.style.transform = 'translate(0,-40px)';
+          btn.style.opacity = '0';
+          btn.style.pointerEvents = 'none';
+
+        });
+
+      }
+
+    });
+
+  })();
 </script>
 
 
