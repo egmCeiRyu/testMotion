@@ -448,7 +448,7 @@
 document.getElementById('captureBtn').addEventListener('click', function () {
 
   requestCompassPermission()
-  
+
   var colorMenu  = document.getElementById('colorMenu');
   var scaleLabel = document.getElementById('scaleLabel');
   var captureBtn = document.getElementById('captureBtn');
@@ -689,7 +689,9 @@ window.addEventListener('load', function () {
     var sunPos  = SunCalc.getPosition(now, lat, lon);
 
     var altitude = sunPos.altitude;
-    var azimuth  = sunPos.azimuth; // radianos, ref Sul
+    var azimuth =
+  sunPos.azimuth +
+  (compassHeading * Math.PI / 180) // radianos, ref Sul
 
     // Salva o último heading conhecido
     window._lastHeading = compassHeading || 0;
