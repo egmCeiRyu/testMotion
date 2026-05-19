@@ -496,11 +496,13 @@
     const yaw =
       camera.object3D.rotation.y
     
-    window.sessionYaw =
-    yaw * Math.PI / 180
+    window.sessionYaw = yaw
 
     document.getElementById('debugHeading').innerHTML =
-  'Yaw raw: ' + yaw.toFixed(3)
+  'Yaw: ' +
+  document.getElementById('debugHeading').innerHTML +
+  '<br>Compass: ' +
+  compassHeading.toFixed(1)
     
     
     
@@ -810,12 +812,15 @@ window.addEventListener('load', function () {
 
       const altitude = sunPos.altitude
       const headingRad = compassHeading * Math.PI / 180
+      
+      const sessionYaw =
+      window.sessionYaw || 0
 
       const azimuth =
-  sunPos.azimuth -
-  window.sessionYaw +
-  0.15 -
-        headingRad
+      sunPos.azimuth -
+      sessionYaw +
+      0.15 -
+      headingRad
 
       const distance = 40
 
