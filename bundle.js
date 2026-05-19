@@ -400,7 +400,7 @@ if(e.object3D){
   if(mesh.isMesh){
 
     mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.receiveShadow = false;
 
     if(mesh.material){
 
