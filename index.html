@@ -602,11 +602,11 @@ window.addEventListener('load', function () {
       const altitude = sunPos.altitude
       const azimuth = sunPos.azimuth
 
-      const distance = 20
+      const distance = 40
 
       const x = -Math.sin(azimuth) * distance
       const z = -Math.cos(azimuth) * distance
-      const y = Math.sin(altitude) * distance
+      const y = Math.sin(altitude) * distance * 0.7
 
       const sun = document.getElementById('sunLight')
 
