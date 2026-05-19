@@ -490,25 +490,6 @@
 
   targetBtn.addEventListener('click', function () {
     
-    //---------------------------------------------------------apagar
-    const camera = document.getElementById('camera')
-
-    const yaw =
-      camera.object3D.rotation.y
-    
-    window.sessionYaw = yaw
-
-    document.getElementById('debugHeading').innerHTML =
-  'Yaw: ' +
-  document.getElementById('debugHeading').innerHTML +
-  '<br>Compass: ' +
-  compassHeading.toFixed(1)
-    
-    
-    
-    //-------------------------------------------------------apagar
-    
-    
     requestCompassPermission();
 
     var model  = document.getElementById('model');
