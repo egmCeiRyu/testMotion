@@ -496,10 +496,11 @@
     const yaw =
       camera.object3D.rotation.y
     
-    window.sessionYaw = yaw
+    window.sessionYaw =
+    yaw * Math.PI / 180
 
     document.getElementById('debugHeading').innerHTML =
-      'Yaw: ' + yaw.toFixed(3)
+  'Yaw raw: ' + yaw.toFixed(3)
     
     
     
@@ -814,7 +815,7 @@ window.addEventListener('load', function () {
   sunPos.azimuth -
   window.sessionYaw +
   0.15 -
-        headingRad5
+        headingRad
 
       const distance = 40
 
