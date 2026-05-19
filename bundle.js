@@ -395,22 +395,7 @@ setInterval(function(){
 
 if(e.object3D){
   
-e.object3D.traverse(function(mesh){
-
-  if(mesh.isMesh){
-
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
-    if(mesh.material){
-
-      mesh.material.needsUpdate = true;
-
-    }
-
-  }
-
-});
+  console.log(e.object3D.scale.x)
 
 var t=
 e.object3D.scale.x,

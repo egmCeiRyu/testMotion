@@ -328,32 +328,28 @@
 
 <a-entity
 
-  id="sunLight"
-
   light="
     type:directional;
-    intensity:1;
+    intensity:0.8;
     castShadow:true;
-
-    shadowMapWidth:1024;
-    shadowMapHeight:1024;
-
-    shadowCameraTop:20;
-    shadowCameraBottom:-20;
-    shadowCameraLeft:-20;
-    shadowCameraRight:20;
-
-    shadowCameraNear:1;
-    shadowCameraFar:80;
-
-    target:#model;
+    shadowMapHeight:2048;
+    shadowMapWidth:2048;
+    shadowCameraTop:40;
+    shadowCameraBottom:-40;
+    shadowCameraRight:40;
+    shadowCameraLeft:-40;
+    target:#model
   "
 
-  position="8 10 5"
+  xrextras-attach="
+    target:model;
+    offset:8 15 4
+  "
 
-  shadow
+  position="1 4.3 2.5"
 
->
+  shadow>
+
 </a-entity>
 
 <a-light
@@ -384,10 +380,7 @@
 
   rotation="0 0 0"
 
-  shadow="
-    cast:true;
-    receive:true
-  "
+  shadow="receive:false"
 
 >
 </a-entity>
@@ -402,17 +395,8 @@
 
   position="0 -0.1 0"
 
-  shadow="
-    receive:true
-  "
+  visible="false">
 
-  material="
-    color:#ffffff;
-    transparent:true;
-    opacity:0.001;
-  "
-
->
 </a-box>
 
 </a-scene>
