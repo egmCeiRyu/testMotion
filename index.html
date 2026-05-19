@@ -756,12 +756,19 @@ window.addEventListener('load', function () {
 
   window.addEventListener('deviceorientation', function (event) {
 
-    if (event.webkitCompassHeading !== undefined) {
-      compassHeading = event.webkitCompassHeading
-    }
+  if (event.webkitCompassHeading !== undefined) {
 
-  })
-  
+    compassHeading = event.webkitCompassHeading
+
+    document.getElementById('debugHeading').innerHTML =
+      'Yaw: ' +
+      document.getElementById('debugHeading').innerHTML +
+      '<br>Compass: ' +
+      compassHeading.toFixed(1)
+
+  }
+
+})
     function initRealSun() {
 
       if (!navigator.geolocation) {
