@@ -15,10 +15,6 @@
   "
 >
 
-<meta
-  name="viewport"
-  content="width=device-width,initial-scale=1">
-
 <title>AR Model Viewer</title>
 
 <script
@@ -47,16 +43,9 @@
 
 <style>
 
-  .plus-btn,
-  .menu-btn {
-    touch-action: manipulation;
-  }
+  .plus-btn, .menu-btn { touch-action: manipulation; }
+  body { touch-action: manipulation; }
 
-  body {
-  touch-action: manipulation;
-  }
-
-  /* ── Target / crosshair overlay ── */
   #targetOverlay {
     position: fixed;
     inset: 0;
@@ -65,42 +54,24 @@
     align-items: center;
     justify-content: center;
     z-index: 88888;
-    pointer-events: none; /* overlay itself is transparent to touches */
+    pointer-events: none;
   }
 
   #targetBtn {
-    width: 90px;
-    height: 90px;
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    pointer-events: auto;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* subtle pulse to attract attention */
+    width: 90px; height: 90px;
+    background: transparent; border: none; padding: 0;
+    cursor: pointer; pointer-events: auto;
+    display: flex; align-items: center; justify-content: center;
     animation: pulse 2s ease-in-out infinite;
   }
 
-  /* SVG crosshair drawn with CSS */
-  #targetBtn svg {
-    width: 90px;
-    height: 90px;
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.7));
-  }
+  #targetBtn svg { width: 90px; height: 90px; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
 
   #targetHint {
-    margin-top: 12px;
-    color: white;
-    font-family: Arial, sans-serif;
-    font-size: 13px;
-    font-weight: bold;
-    letter-spacing: 0.08em;
-    text-shadow: 0 0 8px black;
-    pointer-events: none;
-    text-align: center;
+    margin-top: 12px; color: white;
+    font-family: Arial, sans-serif; font-size: 13px;
+    font-weight: bold; letter-spacing: 0.08em;
+    text-shadow: 0 0 8px black; pointer-events: none; text-align: center;
   }
 
   @keyframes pulse {
@@ -108,118 +79,58 @@
     50%       { transform: scale(1.1); opacity: 0.75; }
   }
 
-  /* Hide after placement */
-  #targetOverlay.hidden {
-    display: none;
-  }
+  #targetOverlay.hidden { display: none; }
 
-  /* ── FAB ── */
   #fabContainer {
-    position: fixed;
-    bottom: 140px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 99999;
+    position: fixed; bottom: 140px; left: 50%;
+    transform: translateX(-50%); z-index: 99999;
   }
 
   #mainFab {
-    width: 30px;
-    height: 39px;
-    border-radius: 50%;
-    border: none;
-    font-size: 20px;
-    background: #ffffff;
+    width: 30px; height: 39px; border-radius: 50%;
+    border: none; font-size: 20px; background: #ffffff;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   }
 
   .fabItem {
-    position: absolute;
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.75);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition:
-      transform 0.1s ease,
-      opacity 0.3s ease;
+    position: absolute; width: 58px; height: 58px;
+    border-radius: 50%; background: rgba(255,255,255,0.75);
+    color: white; display: flex; align-items: center;
+    justify-content: center; opacity: 0; pointer-events: none;
+    transition: transform 0.1s ease, opacity 0.3s ease;
   }
 
-  /* Hide 8th Wall branding */
-  div[data-8thwall-branding],
-  .xrextras-branding,
-  img[src*="8thwall"],
-  div[style*="8thwall"] {
-    display: none !important;
-  }
+  div[data-8thwall-branding], .xrextras-branding,
+  img[src*="8thwall"], div[style*="8thwall"] { display: none !important; }
 
   #colorMenu {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    z-index: 999;
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%); display: flex; gap: 10px; z-index: 999;
   }
 
   #colorMenu button {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-    min-height: 42px;
-    aspect-ratio: 1 / 1;
-    flex: 0 0 auto;
-    border-radius: 50%;
-    border: 3px solid white;
-    padding: 0;
+    width: 42px; height: 42px; min-width: 42px; min-height: 42px;
+    aspect-ratio: 1/1; flex: 0 0 auto;
+    border-radius: 50%; border: 3px solid white; padding: 0;
   }
 
   #captureBtn {
-    position: fixed !important;
-    top: 30px;
-    left: 20px;
-    width: 58px;
-    height: 58px;
-    border-radius: 50%;
-    border: none;
-    background: transparent;
-    z-index: 999999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    position: fixed !important; top: 30px; left: 20px;
+    width: 58px; height: 58px; border-radius: 50%;
+    border: none; background: transparent; z-index: 999999;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.35);
   }
 
-  #captureIcon {
-    color: red;
-    font-size: 65px;
-    line-height: 1;
-    position: relative;
-    top: -1px;
-  }
+  #captureIcon { color: red; font-size: 65px; line-height: 1; position: relative; top: -1px; }
 
   #scaleLabel {
-    position: fixed;
-    top: 24px;
-    right: 20px;
-    padding: 10px 14px;
-    border-radius: 18px;
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(10px);
-    color: white;
-    font-family: Arial;
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 1.2;
-    z-index: 9999;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    position: fixed; top: 24px; right: 20px;
+    padding: 10px 14px; border-radius: 18px;
+    background: rgba(0,0,0,0.35); backdrop-filter: blur(10px);
+    color: white; font-family: Arial; font-size: 18px;
+    font-weight: bold; line-height: 1.2; z-index: 9999;
+    text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   }
 
 </style>
@@ -228,36 +139,21 @@
 
 <body>
 
-<!-- ══════════════════════════════════════
-     TARGET / CROSSHAIR — clique para colocar o modelo
-     ══════════════════════════════════════ -->
 <div id="targetOverlay">
-
   <button id="targetBtn" title="Tap to place model">
-    <!-- SVG crosshair -->
     <svg viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- outer circle -->
       <circle cx="45" cy="45" r="38" stroke="white" stroke-width="2.5" stroke-opacity="0.9"/>
-      <!-- inner circle -->
       <circle cx="45" cy="45" r="10" stroke="white" stroke-width="2.5" stroke-opacity="0.9"/>
-      <!-- center dot -->
       <circle cx="45" cy="45" r="3" fill="white" fill-opacity="0.95"/>
-      <!-- top tick -->
       <line x1="45" y1="7"  x2="45" y2="26" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- bottom tick -->
       <line x1="45" y1="64" x2="45" y2="83" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- left tick -->
       <line x1="7"  y1="45" x2="26" y2="45" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
-      <!-- right tick -->
       <line x1="64" y1="45" x2="83" y2="45" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
     </svg>
   </button>
-
   <div id="targetHint">タップして配置 / Tap to place</div>
-
 </div>
 
-<!-- FAB -->
 <div id="fabContainer">
   <button id="mainFab">+</button>
   <div class="fabItem" id="captureBtn">
@@ -277,22 +173,22 @@
   <span id="promptText" style="display:none;"></span>
 </div>
 
+<!-- ✅ FIX 1: "renderer" correto (era "rrenderer" com R duplo) -->
+<!-- ✅ FIX 2: shadowMapEnabled e PCFSoftShadowMap habilitados -->
 <a-scene
 
   tap-place
-
   xrextras-gesture-detector
-
   landing-page
-
   xrextras-loading
   xrextras-runtime-error
 
-  rrenderer="
-  colorManagement:true;
-  physicallyCorrectLights:true;
-  shadowMapEnabled:true;
-  shadowMapType:PCFSoftShadowMap;"
+  renderer="
+    colorManagement: true;
+    physicallyCorrectLights: true;
+    shadowMapEnabled: true;
+    shadowMapType: PCFSoftShadowMap;
+  "
 
   xrweb="
     allowedDevices:any;
@@ -303,150 +199,102 @@
     defaultEnvironmentSkyTopColor:#5ac8fa;
     defaultEnvironmentSkyGradientStrength:0.5;
   "
-
 >
 
 <a-assets>
-
   <img id="groundTex" src="assets/sand.jpg">
-
   <a-asset-item id="cactusModel" src="assets/cactus.glb"></a-asset-item>
-
 </a-assets>
 
 <a-camera
-
   id="camera"
-
   position="0 8 8"
-
   raycaster="objects: .cantap"
-
-  cursor="fuse:false;rayOrigin:mouse;"
-
->
+  cursor="fuse:false;rayOrigin:mouse;">
 </a-camera>
 
+<!-- ✅ FIX 3: luz configurada APENAS aqui no HTML — o JS só muda a position -->
 <a-entity
   id="sunLight"
   light="
     type: directional;
-    intensity: 0.8;
+    intensity: 1.2;
     castShadow: true;
-    shadowBias: -0.001;
+    shadowBias: -0.0005;
     shadowMapHeight: 2048;
     shadowMapWidth: 2048;
-    shadowCameraTop: 50;
-    shadowCameraBottom: -50;
-    shadowCameraRight: 50;
-    shadowCameraLeft: -50;
-    shadowCameraNear: 1;
-    shadowCameraFar: 100; 
+    shadowCameraTop: 15;
+    shadowCameraBottom: -15;
+    shadowCameraRight: 15;
+    shadowCameraLeft: -15;
+    shadowCameraNear: 0.5;
+    shadowCameraFar: 50;
+    shadowRadius: 2;
   "
-  position="0 10 0">
+  position="-10 20 -10">
 </a-entity>
 
-<a-light type="ambient" intensity="0.5"></a-light>
+<a-light type="ambient" intensity="0.4"></a-light>
 
 <a-entity
-
   id="model"
-
   gltf-model="#cactusModel"
-
   visible="false"
-
   class="cantap"
-
   xrextras-hold-drag
-
   xrextras-two-finger-rotate
-
   xrextras-pinch-scale="min:0.1;max:1;"
-
   scale="1 1 1"
-
   rotation="0 0 0"
-
-  shadow="receive:true;
-  cast:true"
-
->
+  shadow="cast: true; receive: true">
 </a-entity>
 
+<!-- ✅ FIX 4: ground agora recebe sombra -->
 <a-box
-
   id="ground"
-
   class="cantap"
-
   scale="20 1 20"
-
   position="0 -0.1 0"
-
-  visible="false">
-
+  visible="false"
+  shadow="cast: false; receive: true">
 </a-box>
 
 </a-scene>
 
 
-<!-- ══════════════════════════════════════
-     TARGET BUTTON — place model in front of camera
-     ══════════════════════════════════════ -->
+<!-- TARGET BUTTON -->
 <script>
 (function () {
-
   var targetBtn     = document.getElementById('targetBtn');
   var targetOverlay = document.getElementById('targetOverlay');
 
   targetBtn.addEventListener('click', function () {
-
     var model  = document.getElementById('model');
     var camera = document.getElementById('camera');
-
     if (!model || !camera) return;
 
-    // ── compute a position 2 m in front of the camera ──
-    var camObj = camera.object3D;
-
-    // Direction the camera faces (local -Z in world space)
-    var THREE = AFRAME.THREE;
+    var camObj    = camera.object3D;
+    var THREE     = AFRAME.THREE;
     var direction = new THREE.Vector3(0, 0, -1);
     direction.applyQuaternion(camObj.quaternion);
 
-    var camPos = new THREE.Vector3();
+    var camPos   = new THREE.Vector3();
     camObj.getWorldPosition(camPos);
 
-    var distance = 2; // metres in front of camera
-    var placePos = camPos.clone().addScaledVector(direction, distance);
-
-    // Keep model at ground level (y = 0)
+    var placePos = camPos.clone().addScaledVector(direction, 2);
     placePos.y = 0;
 
-    model.setAttribute('position', {
-      x: placePos.x,
-      y: placePos.y,
-      z: placePos.z
-    });
-
+    model.setAttribute('position', { x: placePos.x, y: placePos.y, z: placePos.z });
     model.setAttribute('visible', 'true');
-
-    // Hide the overlay after placement
     targetOverlay.classList.add('hidden');
-
   });
-
 })();
 </script>
 
 
-<!-- ══════════════════════════════════════
-     CAPTURE BUTTON
-     ══════════════════════════════════════ -->
+<!-- CAPTURE BUTTON -->
 <script>
 document.getElementById('captureBtn').addEventListener('click', function () {
-
   var colorMenu  = document.getElementById('colorMenu');
   var scaleLabel = document.getElementById('scaleLabel');
   var captureBtn = document.getElementById('captureBtn');
@@ -456,22 +304,15 @@ document.getElementById('captureBtn').addEventListener('click', function () {
   captureBtn.style.display = 'none';
 
   setTimeout(function () {
-
     var canvas = document.querySelector('canvas');
     if (!canvas) return;
 
     var image = canvas.toDataURL('image/jpeg', 0.95);
-
     fetch(image)
       .then(function (res) { return res.blob(); })
       .then(function (blob) {
-
         var file = new File([blob], 'ar-photo.jpg', { type: 'image/jpeg' });
-
-        if (navigator.share) {
-          navigator.share({ files: [file] });
-        }
-
+        if (navigator.share) navigator.share({ files: [file] });
       });
 
     setTimeout(function () {
@@ -479,16 +320,12 @@ document.getElementById('captureBtn').addEventListener('click', function () {
       if (scaleLabel) scaleLabel.style.display = 'block';
       captureBtn.style.display = 'flex';
     }, 300);
-
   }, 100);
-
 });
 </script>
 
 
-<!-- ══════════════════════════════════════
-     REMOVE 8th WALL BRANDING
-     ══════════════════════════════════════ -->
+<!-- REMOVE 8th WALL BRANDING -->
 <script>
 window.addEventListener('load', function () {
   setTimeout(function () {
@@ -503,64 +340,43 @@ window.addEventListener('load', function () {
 </script>
 
 
-<!-- ══════════════════════════════════════
-     FAB MENU
-     ══════════════════════════════════════ -->
+<!-- FAB MENU -->
 <script>
 (function () {
-
   var mainFab = document.getElementById('mainFab');
   var items   = document.querySelectorAll('.fabItem');
   var open    = false;
 
   mainFab.addEventListener('click', function () {
-
     open = !open;
-
     if (open) {
-
-      items[0].style.transform    = 'translate(-130px,-40px)';
-      items[1].style.transform    = 'translate(90px,-50px)';
-      items.forEach(function (i) {
-        i.style.opacity       = '1';
-        i.style.pointerEvents = 'auto';
-      });
-
+      items[0].style.transform = 'translate(-130px,-40px)';
+      items[1].style.transform = 'translate(90px,-50px)';
+      items.forEach(function (i) { i.style.opacity = '1'; i.style.pointerEvents = 'auto'; });
     } else {
-
       items.forEach(function (i) {
-        i.style.transform     = 'translate(0,-40px)';
-        i.style.opacity       = '0';
+        i.style.transform = 'translate(0,-40px)';
+        i.style.opacity = '0';
         i.style.pointerEvents = 'none';
       });
-
     }
-
   });
-
 })();
 </script>
 
 
-<!-- ══════════════════════════════════════
-     VIDEO RECORDING
-     ══════════════════════════════════════ -->
+<!-- VIDEO RECORDING -->
 <script>
 (function () {
-
   var recordBtn      = document.getElementById('recordBtn');
   var mediaRecorder;
   var recordedChunks = [];
   var recording      = false;
 
   recordBtn.addEventListener('click', function () {
-
     var canvas = document.querySelector('canvas');
-
     if (!recording) {
-
       var stream = canvas.captureStream(30);
-
       mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
       recordedChunks = [];
 
@@ -572,29 +388,24 @@ window.addEventListener('load', function () {
         var blob = new Blob(recordedChunks, { type: 'video/webm' });
         var url  = URL.createObjectURL(blob);
         var a    = document.createElement('a');
-        a.href     = url;
-        a.download = 'ar-video.webm';
-        a.click();
+        a.href = url; a.download = 'ar-video.webm'; a.click();
         URL.revokeObjectURL(url);
       };
 
       mediaRecorder.start();
-      recording         = true;
+      recording = true;
       recordBtn.innerText = 'STOP';
-
     } else {
-
       mediaRecorder.stop();
-      recording           = false;
+      recording = false;
       recordBtn.innerText = '🎥';
-
     }
-
   });
-
 })();
 </script>
 
+
+<!-- ✅ FIX 5: SUN LIGHT — JS só muda position, NUNCA o atributo light -->
 <script>
   function initRealSun() {
     if (!navigator.geolocation) return;
@@ -603,78 +414,66 @@ window.addEventListener('load', function () {
       var lat = position.coords.latitude;
       var lon = position.coords.longitude;
 
-      // Pega orientação da bússola
+      // Bússola absoluta (Android) 
       window.addEventListener('deviceorientationabsolute', function(e) {
-        updateSunLight(lat, lon, e.alpha); // alpha = graus do Norte magnético
+        if (e.alpha !== null) updateSunLight(lat, lon, e.alpha);
       }, true);
 
-      // Fallback se deviceorientationabsolute não disparar
+      // Fallback iOS / outros
       window.addEventListener('deviceorientation', function(e) {
-        if (e.absolute) updateSunLight(lat, lon, e.alpha);
+        if (e.absolute && e.alpha !== null) updateSunLight(lat, lon, e.alpha);
       }, true);
 
-      // Atualiza posição do sol a cada 60s
-      setInterval(function() { updateSunLight(lat, lon, window._lastHeading || 0); }, 60000);
+      // Atualiza a cada 60s mesmo sem girar o dispositivo
+      setInterval(function() {
+        updateSunLight(lat, lon, window._lastHeading || 0);
+      }, 60000);
+
+      // Primeira chamada imediata
+      updateSunLight(lat, lon, 0);
+
+    }, function(err) {
+      console.warn('GPS error:', err);
+      // Fallback: Osaka
+      updateSunLight(34.6937, 135.5023, 0);
     });
   }
 
   function updateSunLight(lat, lon, compassHeading) {
-    var now     = new Date();
-    var sunPos  = SunCalc.getPosition(now, lat, lon);
+    var now    = new Date();
+    var sunPos = SunCalc.getPosition(now, lat, lon);
 
     var altitude = sunPos.altitude;
-    var azimuth  = sunPos.azimuth; // radianos, ref Sul
+    var azimuth  = sunPos.azimuth;
 
-    // Salva o último heading conhecido
     window._lastHeading = compassHeading || 0;
 
-    // Converte azimute solar para graus geográficos (0=Norte)
-    var sunAzDeg = (azimuth * 180 / Math.PI + 180) % 360; // graus do Norte
+    // Converte para graus geográficos (0 = Norte)
+    var sunAzDeg = (azimuth * 180 / Math.PI + 180) % 360;
 
-    // Subtrai o heading da câmera para alinhar ao espaço AR
+    // Azimute relativo ao espaço AR (compensa orientação do dispositivo)
     var relAz = (sunAzDeg - (compassHeading || 0)) * Math.PI / 180;
 
-    var distance = 50;
+    var distance = 30;
     var x = -Math.sin(relAz) * distance;
     var z = -Math.cos(relAz) * distance;
-    var y =  Math.sin(altitude) * distance;
+    var y = Math.max(5, Math.sin(altitude) * distance); // mínimo y=5
 
     var sun = document.getElementById('sunLight');
     if (!sun) return;
 
+    // ✅ APENAS muda a posição — nunca sobrescreve o atributo light
     sun.setAttribute('position', x + ' ' + y + ' ' + z);
 
-    var intensity = Math.max(0, Math.sin(altitude));
-    sun.setAttribute('light',
-      'type:directional;' +
-      'intensity:' + (0.3 + intensity * 1.2).toFixed(2) + ';' +
-      'castShadow:true;' +
-      'shadowBias:-0.0005;' +
-      'shadowMapHeight:2048;' +
-      'shadowMapWidth:2048;' +
-      'shadowCameraTop:15;' +
-      'shadowCameraBottom:-15;' +
-      'shadowCameraRight:15;' +
-      'shadowCameraLeft:-15;' +
-      'shadowCameraNear:0.5;' +
-      'shadowCameraFar:50;' +
-      'shadowRadius:3;'
+    console.log(
+      '☀️ alt=' + (altitude * 180/Math.PI).toFixed(1) + '°' +
+      ' sunAz=' + sunAzDeg.toFixed(1) + '°' +
+      ' compass=' + (compassHeading||0).toFixed(1) + '°' +
+      ' pos=(' + x.toFixed(1) + ', ' + y.toFixed(1) + ', ' + z.toFixed(1) + ')'
     );
-
-    console.log('☀️ sunAz=' + sunAzDeg.toFixed(1) + '° compass=' + (compassHeading||0).toFixed(1) + '° relAz=' + (relAz*180/Math.PI).toFixed(1) + '°');
   }
 
   window.addEventListener('load', function() { initRealSun(); });
-</script>
-
-<script>
-  const plusBtn = document.getElementById('plusBtn')
-
-  plusBtn.addEventListener('touchend', (e) => {
-    e.preventDefault()
-
-    menu.classList.toggle('active')
-  })
 </script>
 
 </body>
