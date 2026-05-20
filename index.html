@@ -820,72 +820,73 @@ window.addEventListener('load', function () {
 (function () {
 
   const scene = document.querySelector('a-scene');
+  const isApple = /iP(hone|ad|od)/i.test(navigator.userAgent) ||
+                  /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-  /* ── Detecta Safari / iOS ── */
-  const isIOS    = /iP(hone|ad|od)/i.test(navigator.userAgent);
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  const isApple  = isIOS || isSafari;
-
-  /* ── 1. Configura o renderer assim que ele existe ── */
-  scene.addEventListener('renderstart', function () {
-
-    const renderer = this.renderer;
+  function applyShadowConfig() {
+    const renderer = scene.renderer;
     if (!renderer) return;
 
     renderer.shadowMap.enabled = true;
-
-    /* PCFShadowMap falha silenciosamente no Metal/iOS.
-       BasicShadowMap é o único garantido no Safari.       */
-    renderer.shadowMap.type = isApple
-      ? AFRAME.THREE.BasicShadowMap     // ✅ iOS Safari
-      : AFRAME.THREE.PCFSoftShadowMap;  // ✅ Chrome / Android
-
+    renderer.shadowMap.autoUpdate = true;  // ← crítico no Safari
     renderer.shadowMap.needsUpdate = true;
+
+    renderer.shadowMap.type = isApple
+      ? AFRAME.THREE.BasicShadowMap
+      : AFRAME.THREE.PCFSoftShadowMap;
 
     const sun = document.getElementById('sunLight');
     if (sun) {
-      /* iOS Metal precisa de bias maior — isWebGL2 não serve
-         porque o Safari iOS 26 É WebGL2 mas ainda precisa de -0.005 */
-      const bias = isApple ? -0.005 : -0.0005;
-      sun.setAttribute('light', 'shadowBias', bias);
-      console.log(isApple ? '🍎 Apple' : '🖥️ Chrome', 'shadowBias:', bias);
+      const lightComp = sun.components.light;
+      if (lightComp && lightComp.light) {
+        // Seta direto no objeto Three.js, bypassa o A-Frame
+        lightComp.light.castShadow = true;
+        lightComp.light.shadow.bias = isApple ? -0.005 : -0.0005;
+        lightComp.light.shadow.mapSize.width  = 2048;
+        lightComp.light.shadow.mapSize.height = 2048;
+        lightComp.light.shadow.map = null; // força recriar o shadow map
+        console.log('☀️ shadow configurado direto no Three.js');
+      }
     }
+  }
 
+  // Tenta no renderstart
+  scene.addEventListener('renderstart', function () {
+    applyShadowConfig();
   });
 
-  /* ── 2. Força sombras no modelo DEPOIS que o GLTF carregou ── */
-  scene.addEventListener('loaded', function () {
+  // Tenta de novo quando o 8th Wall sinaliza que está pronto
+  window.addEventListener('xrloaded', function () {
+    setTimeout(applyShadowConfig, 500);
+  });
 
+  // Tenta de novo quando o modelo é colocado (última chance)
+  scene.addEventListener('loaded', function () {
     const model = document.getElementById('model');
     if (!model) return;
 
     model.addEventListener('model-loaded', function () {
 
+      // Força sombra em todos os meshes
       model.object3D.traverse(function (node) {
         if (node.isMesh) {
           node.castShadow    = true;
           node.receiveShadow = true;
-
-          /* iOS: força needsUpdate em todos os materiais do array */
-          if (node.material) {
-            const mats = Array.isArray(node.material)
-              ? node.material : [node.material];
-            mats.forEach(m => { m.needsUpdate = true; });
-          }
+          const mats = Array.isArray(node.material)
+            ? node.material : [node.material];
+          mats.forEach(m => { m.needsUpdate = true; });
         }
       });
 
-      /* Safari: força recompilação dos shaders de sombra */
-      if (scene.renderer) scene.renderer.shadowMap.needsUpdate = true;
+      // Aplica config de shadow de novo após modelo carregar
+      setTimeout(applyShadowConfig, 200);
 
       console.log('✅ Sombras aplicadas ao modelo');
     });
-
   });
 
 })();
 </script>
-  
   
 </body>
 </html>
