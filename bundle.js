@@ -173,17 +173,17 @@ e.push(l)
 
 },
 
-e
+e;
 
-}
+};
 
 },
 
 645(t){
 
 t.exports=function(t){
-return t[1]
-}
+return t[1];
+};
 
 }
 
@@ -390,24 +390,15 @@ t.material.name==="wall_mat" &&
 });
 
 setInterval(function(){
-  
-  
 
-if(e.object3D){
+  if(e.object3D){
 
+    var scale = e.object3D.scale.x;
+    var percent = Math.round(scale * 100);
 
-var t=
-e.object3D.scale.x,
+    r.innerText = "Size: " + percent + "%";
 
-n = Math.round(t * 100)
-
-r.innerText=
-"Size: ".concat(
-n,
-"%"
-);
-
-}
+  }
 
 },120);
 
