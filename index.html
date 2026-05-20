@@ -304,6 +304,13 @@
     </button>
 
   </div>
+  
+  <button id="debugBtn" style="
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  z-index:999999; padding:20px;
+  font-size:18px; background:red; color:white;
+">DEBUG SHADOW</button>
 
 <!-- ══════════════════════════════════════
      TARGET / CROSSHAIR — clique para colocar o modelo
@@ -886,6 +893,26 @@ window.addEventListener('load', function () {
   });
 
 })();
+</script>
+  
+  <script>
+document.getElementById('debugBtn').addEventListener('click', function () {
+  const scene = document.querySelector('a-scene');
+  const renderer = scene.renderer;
+  const sun = document.getElementById('sunLight');
+  const light = sun.components.light.light;
+
+  const info = [
+    'shadowMap.enabled: ' + renderer.shadowMap.enabled,
+    'shadowMap.type: ' + renderer.shadowMap.type,
+    'light.castShadow: ' + light.castShadow,
+    'shadow.map: ' + (light.shadow.map ? 'EXISTS' : 'NULL'),
+    'shadow.bias: ' + light.shadow.bias,
+    'isApple: ' + (/iP(hone|ad|od)/i.test(navigator.userAgent))
+  ].join('\n');
+
+  alert(info);
+});
 </script>
   
 </body>
