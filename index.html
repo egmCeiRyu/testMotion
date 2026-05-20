@@ -456,12 +456,7 @@
   scale="20 1 20"
   position="0 -0.1 0"
   visible="true"
-  material="
-    color: #000000;
-    transparent: true;
-    opacity: 0.4;
-    depthWrite: false;
-  "
+  material="color: #ffffff; transparent: true; opacity: 0.0001; depthWrite: false"
   shadow="cast: false; receive: true">
 </a-box>
 
@@ -892,6 +887,41 @@ window.addEventListener('load', function () {
 
 })();
 </script>
+  
+  <script>
+// Roda DEPOIS que o modelo carregar
+document.querySelector('a-scene').addEventListener('loaded', function () {
+  const ground = document.getElementById('ground');
+  if (!ground) return;
+
+  ground.addEventListener('materialtextureloaded', applyTrueShadow);
+  
+  // Fallback — aplica direto após 1s
+  setTimeout(applyTrueShadow, 1000);
+
+  function applyTrueShadow() {
+    const mesh = ground.getObject3D('mesh');
+    if (!mesh) return;
+
+    // ShadowMaterial = renderiza APENAS sombra, invisível sem ela
+    const shadowMat = new AFRAME.THREE.ShadowMaterial({
+      opacity: 0.5,        // intensidade da sombra (0.3 a 0.6)
+      transparent: true,
+      depthWrite: false,
+    });
+
+    mesh.traverse(function (node) {
+      if (node.isMesh) {
+        node.material      = shadowMat;
+        node.receiveShadow = true;
+      }
+    });
+
+    console.log('✅ ShadowMaterial aplicado no ground');
+  }
+});
+</script>
+
   
 </body>
 </html>
