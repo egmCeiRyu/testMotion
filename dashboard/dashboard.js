@@ -57,11 +57,6 @@ document.getElementById("todayViews").innerText=
 
 data.filter(x=>x.created_at.startsWith(today)).length;
 
-const unique=
-
-new Set(data.map(x=>x.device)).size;
-
-document.getElementById("uniqueUsers").innerText=unique;
 
 const tbody=document.getElementById("tableBody");
 
