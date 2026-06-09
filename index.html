@@ -287,7 +287,7 @@
 <body>
   
     <!-- MENU SOL -->
-  <div id="sunMenu">
+  <!-- <div id="sunMenu">
 
     <button class="sunBtn" id="morningBtn">
       <img src="ui/asa.png">
@@ -305,7 +305,7 @@
       <img src="ui/ima.png">
     </button>
 
-  </div>
+  </div> -->
 
 <!-- ══════════════════════════════════════
      TARGET / CROSSHAIR — clique para colocar o modelo
@@ -476,8 +476,8 @@
 
   targetBtn.addEventListener('click', function () {
     
-    captureSessionYaw(); 
-    requestCompassPermission();
+    // captureSessionYaw(); 
+    // requestCompassPermission();
 
     var model  = document.getElementById('model');
     var camera = document.getElementById('camera');
@@ -809,14 +809,14 @@ window.addEventListener('load', function () {
   window.addEventListener('load', () => { initRealSun(); });
 </script>
 
-<script>
+<!-- <script>
   (function () {
     document.getElementById('morningBtn').addEventListener('click', () => setSunTime(7, 0));
     document.getElementById('noonBtn')   .addEventListener('click', () => setSunTime(12, 0));
     document.getElementById('eveningBtn').addEventListener('click', () => setSunTime(17, 30));
     document.getElementById('nowBtn')    .addEventListener('click', () => initRealSun());
   })();
-</script>
+</script> -->
 
 <script>
 (function () {
