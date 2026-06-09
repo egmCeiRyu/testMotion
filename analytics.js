@@ -2,13 +2,15 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const supabase = createClient(
     "https://vwlevkuhenymqrlhlwdf.supabase.co",
-    "sb_publishable_xt00-kBah5vzNhpUNsz1vw_gXzgmL9e"
+    "SUA_CHAVE"
 );
 
 window.addEventListener("load", async () => {
 
-    const propertyId = "81a8e5d4-fcdf-4607-a44e-e50aea24b21b";
+    const propertyId =
+        new URLSearchParams(location.search).get("id");
 
+    // Page View
     const { error } = await supabase
         .from("page_views")
         .insert({
@@ -18,10 +20,32 @@ window.addEventListener("load", async () => {
             os: navigator.platform
         });
 
-    if(error){
+    if (error) {
         console.log(error);
-    }else{
+    } else {
         console.log("Analytics enviado!");
+    }
+
+    // AR Session
+    const sessionStart = new Date().toISOString();
+
+    const { data: sessionData, error: sessionError } =
+        await supabase
+            .from("ar_sessions")
+            .insert({
+                property_id: propertyId,
+                device: navigator.userAgent,
+                browser: navigator.userAgent,
+                os: navigator.platform,
+                started_at: sessionStart
+            })
+            .select();
+
+    if (sessionError) {
+        console.log(sessionError);
+    } else {
+        console.log("AR Session criada!");
+        console.log(sessionData);
     }
 
 });
