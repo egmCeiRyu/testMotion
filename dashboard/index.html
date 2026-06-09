@@ -1,49 +1,60 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="ja">
+
 <head>
-    <meta charset="UTF-8">
-    <title>RealEstate Analytics</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
 
-    <script type="module" src="dashboard.js"></script>
+<title>不動産ARダッシュボード</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script type="module" src="dashboard.js"></script>
 
 </head>
 
 <body>
 
-<h1>🏠 RealEstate Analytics</h1>
+<h1>🏠 不動産ARダッシュボード</h1>
 
 <div class="cards">
 
     <div class="card">
-        <h2>Total de Visualizações</h2>
+        <h2>総アクセス数</h2>
         <span id="totalViews">0</span>
     </div>
 
     <div class="card">
-        <h2>Hoje</h2>
+        <h2>本日のアクセス数</h2>
         <span id="todayViews">0</span>
     </div>
 
 </div>
 
-<h2>Últimos acessos</h2>
+<h2>最新アクセス履歴</h2>
 
 <table>
 
 <thead>
+
 <tr>
-<th>Horário</th>
-<th>Dispositivo</th>
-<th>Navegador</th>
+
+<th>日時</th>
+
+<th>デバイス</th>
+
+<th>ブラウザ</th>
+
 </tr>
+
 </thead>
 
 <tbody id="tableBody">
+
 </tbody>
 
 </table>
 
 </body>
+
 </html>

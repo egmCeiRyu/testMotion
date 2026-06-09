@@ -30,17 +30,11 @@ async function loadDashboard(){
 
     data.slice(0,20).forEach(x=>{
 
-        tbody.innerHTML +=
-
-        `
+        tbody.innerHTML += `
         <tr>
-
-        <td>${new Date(x.created_at).toLocaleString()}</td>
-
-        <td>${x.os}</td>
-
-        <td>${x.browser}</td>
-
+            <td>${new Date(x.created_at).toLocaleString("ja-JP")}</td>
+            <td>${x.os}</td>
+            <td>${x.browser}</td>
         </tr>
         `;
 
