@@ -103,28 +103,24 @@ ${getBrowser(x.browser)}
 }
 
 
-async function loadProperty(){
+async function loadProperty() {
 
     const { data, error } = await supabase
-
         .from("properties")
+        .select("*")
+        .eq("id", propertyId);
 
-        .select("name")
+    console.log(data);
+    console.log(error);
 
-        .eq("id", propertyId)
-
-        .single();
-
-    if(error){
-
-        console.log(error);
-
+    if (!data || data.length == 0) {
+        document.getElementById("propertyName").innerText =
+            "物件が見つかりません";
         return;
-
     }
 
     document.getElementById("propertyName").innerText =
-        data.name;
+        data[0].name;
 
 }
 
