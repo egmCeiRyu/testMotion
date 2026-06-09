@@ -1,5 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const propertyId =
+new URLSearchParams(location.search).get("id") ||
+"81a8e5d4-fcdf-4607-a44e-e50aea24b21b";
+
 const supabase = createClient(
     "https://vwlevkuhenymqrlhlwdf.supabase.co",
     "sb_publishable_xt00-kBah5vzNhpUNsz1vw_gXzgmL9e"
@@ -41,13 +45,11 @@ return "💻 Other";
 
 async function loadDashboard(){
 
-const {data}=await supabase
-
-.from("page_views")
-
-.select("*")
-
-.order("created_at",{ascending:false});
+const { data } = await supabase
+    .from("page_views")
+    .select("*")
+    .eq("property_id", propertyId)
+    .order("created_at", { ascending: false });
 
 document.getElementById("totalViews").innerText=data.length;
 
@@ -100,4 +102,31 @@ ${getBrowser(x.browser)}
 
 }
 
+
+async function loadProperty(){
+
+    const { data, error } = await supabase
+
+        .from("properties")
+
+        .select("name")
+
+        .eq("id", propertyId)
+
+        .single();
+
+    if(error){
+
+        console.log(error);
+
+        return;
+
+    }
+
+    document.getElementById("propertyName").innerText =
+        data.name;
+
+}
+
+loadProperty();
 loadDashboard();
