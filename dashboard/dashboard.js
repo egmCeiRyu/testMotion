@@ -11,18 +11,16 @@ const supabase = createClient(
 
 function getBrowser(ua){
 
-ua=ua.toLowerCase();
+    ua = ua.toLowerCase();
 
-if(ua.includes("edg")) return "Edge";
+    if(ua.includes("crios")) return "Chrome";
+    if(ua.includes("fxios")) return "Firefox";
+    if(ua.includes("edgios")) return "Edge";
+    if(ua.includes("edg")) return "Edge";
+    if(ua.includes("chrome")) return "Chrome";
+    if(ua.includes("safari")) return "Safari";
 
-if(ua.includes("chrome")) return "Chrome";
-
-if(ua.includes("safari")&&!ua.includes("chrome")) return "Safari";
-
-if(ua.includes("firefox")) return "Firefox";
-
-return "Other";
-
+    return "Other";
 }
 
 function getDevice(os,browser){
