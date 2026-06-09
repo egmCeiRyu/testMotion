@@ -34,6 +34,8 @@
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
+  
+<script type="module" src="analytics.js"></script>
 
 <style>
 
@@ -474,8 +476,8 @@
 
   targetBtn.addEventListener('click', function () {
     
-    captureSessionYaw(); 
-    requestCompassPermission();
+    // captureSessionYaw(); 
+    // requestCompassPermission();
 
     var model  = document.getElementById('model');
     var camera = document.getElementById('camera');
@@ -807,14 +809,14 @@ window.addEventListener('load', function () {
   window.addEventListener('load', () => { initRealSun(); });
 </script>
 
-<script>
+<!-- <script>
   (function () {
     document.getElementById('morningBtn').addEventListener('click', () => setSunTime(7, 0));
     document.getElementById('noonBtn')   .addEventListener('click', () => setSunTime(12, 0));
     document.getElementById('eveningBtn').addEventListener('click', () => setSunTime(17, 30));
     document.getElementById('nowBtn')    .addEventListener('click', () => initRealSun());
   })();
-</script>
+</script> -->
 
 <script>
 (function () {
