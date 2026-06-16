@@ -33,45 +33,7 @@
   data-preload-chunks="slam">
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/suncalc@1.9.0/suncalc.js"></script>
-
 <style>
-
-  /* MENU SOL VERTICAL */
-  #sunMenu {
-    position: fixed;
-    top: 21px;
-    left: 24px;
-    z-index: 999999;
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
-  }
-  
-  #sunMenu.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .sunBtn {
-    width: 76px;
-    height: 74px;
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  .sunBtn img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-
   .timeFab {
   overflow: hidden;
   padding: 0;
@@ -283,27 +245,6 @@
 </head>
 
 <body>
-  
-    <!-- MENU SOL -->
-  <div id="sunMenu">
-
-    <button class="sunBtn" id="morningBtn">
-      <img src="ui/asa.png">
-    </button>
-
-    <button class="sunBtn" id="noonBtn">
-      <img src="ui/hiru.png">
-    </button>
-
-    <button class="sunBtn" id="eveningBtn">
-      <img src="ui/yuugata.png">
-    </button>
-
-    <button class="sunBtn" id="nowBtn">
-      <img src="ui/ima.png">
-    </button>
-
-  </div>
 
 <!-- ══════════════════════════════════════
      TARGET / CROSSHAIR — clique para colocar o modelo
@@ -473,9 +414,6 @@
   var targetOverlay = document.getElementById('targetOverlay');
 
   targetBtn.addEventListener('click', function () {
-    
-    captureSessionYaw(); 
-    requestCompassPermission();
 
     var model  = document.getElementById('model');
     var camera = document.getElementById('camera');
@@ -578,6 +516,7 @@ window.addEventListener('load', function () {
 </script>
 
 
+
 <!-- ══════════════════════════════════════
      FAB MENU
      ══════════════════════════════════════ -->
@@ -585,11 +524,8 @@ window.addEventListener('load', function () {
 (function () {
 
   var mainFab = document.getElementById('mainFab');
-
   var captureBtn = document.getElementById('captureBtn');
   var recordBtn  = document.getElementById('recordBtn');
-  var sunMenu = document.getElementById('sunMenu');
-
   var open = false;
 
   mainFab.addEventListener('click', function () {
@@ -597,41 +533,26 @@ window.addEventListener('load', function () {
     open = !open;
 
     if (open) {
-      
-      // MOSTRA MENU SOL
-      sunMenu.classList.add('open');
-
-      // POSIÇÕES ORIGINAIS
       captureBtn.style.transform = 'translate(-130px,-40px)';
       recordBtn.style.transform  = 'translate(90px,-51px)';
 
       [captureBtn, recordBtn].forEach(function (btn) {
-
         btn.style.opacity = '1';
         btn.style.pointerEvents = 'auto';
-
       });
 
     } else {
-      
-      sunMenu.classList.remove('open');
-
       [captureBtn, recordBtn].forEach(function (btn) {
-
         btn.style.transform = 'translate(0,-40px)';
         btn.style.opacity = '0';
         btn.style.pointerEvents = 'none';
-
       });
-
     }
 
   });
 
 })();
 </script>
-
-
 <!-- ══════════════════════════════════════
      VIDEO RECORDING
      ══════════════════════════════════════ -->
@@ -697,124 +618,7 @@ window.addEventListener('load', function () {
 
 })();
 </script>
-  
-  <script>
-    async function requestCompassPermission() {
 
-  if (
-    typeof DeviceOrientationEvent !== 'undefined' &&
-    typeof DeviceOrientationEvent.requestPermission === 'function'
-  ) {
-
-    try {
-
-      const result =
-        await DeviceOrientationEvent.requestPermission()
-
-      console.log('Compass permission:', result)
-
-    } catch (e) {
-
-      console.log(e)
-
-    }
-
-  }
-
-}
-</script>
-  
-<script>
-  /* ── BÚSSOLA ── */
-  let compassHeading = 0;
-
-  window.addEventListener('deviceorientation', function (e) {
-    if (e.webkitCompassHeading !== undefined) {
-      // iOS: 0 = Norte, aumenta no sentido horário
-      compassHeading = e.webkitCompassHeading;
-    } else if (e.absolute && e.alpha !== null) {
-      // Android absolute: converte para mesma convenção
-      compassHeading = (360 - e.alpha) % 360;
-    }
-  }, true);
-
-  /* ── sessionYaw: captura o yaw da câmera na hora do placement ──
-     Chamado pelo targetBtn click (já existe no seu código).
-     Guarda para onde o A-Frame aponta como "frente" na sessão.   */
-  function captureSessionYaw() {
-    const camera = document.getElementById('camera');
-    if (!camera) return;
-    const euler = new AFRAME.THREE.Euler();
-    euler.setFromQuaternion(camera.object3D.quaternion, 'YXZ');
-    window.sessionYaw = euler.y; // radianos, yaw da câmera no momento do placement
-  }
-
-  /* ── Cálculo da posição do sol ── */
-  function computeSunPosition(date, lat, lon) {
-    const sunPos  = SunCalc.getPosition(date, lat, lon);
-    const altitude = sunPos.altitude;           // radianos, elevação acima do horizonte
-    const azimuthNorth = sunPos.azimuth + Math.PI; // SunCalc: sul=0 → norte=0 (corrige)
-
-    /* 
-      azimuthNorth: ângulo a partir do NORTE geográfico, sentido horário (radianos)
-      compassHeading: para onde o dispositivo aponta no mundo real (graus, 0=Norte)
-      sessionYaw: para onde a câmera A-Frame aponta na sessão (radianos)
-
-      Para alinhar o sol no espaço 3D do A-Frame com o mundo real:
-        ângulo no A-Frame = azimuth_sol - compassHeading_rad + sessionYaw
-    */
-    const compassRad  = compassHeading * Math.PI / 180;
-    const angleInScene = azimuthNorth - compassRad + (window.sessionYaw || 0);
-
-    const distance = 40;
-    const x =  Math.sin(angleInScene) * distance;
-    const z = -Math.cos(angleInScene) * distance;
-    const y =  Math.sin(altitude)     * distance;
-
-    return { x, y, z };
-  }
-
-  function applySunPosition(pos) {
-    const sun = document.getElementById('sunLight');
-    if (sun) {
-      sun.setAttribute('position', `${pos.x} ${pos.y} ${pos.z}`);
-      console.log('☀️ Sol:', pos);
-    }
-  }
-
-  /* ── GPS → sol atual ── */
-  function initRealSun() {
-    if (!navigator.geolocation) { console.log('GPS não suportado'); return; }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const p = computeSunPosition(new Date(), pos.coords.latitude, pos.coords.longitude);
-        applySunPosition(p);
-      },
-      (err) => console.log(err)
-    );
-  }
-
-  /* ── Hora manual ── */
-  function setSunTime(hours, minutes) {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const date = new Date();
-      date.setHours(hours, minutes, 0);
-      const p = computeSunPosition(date, pos.coords.latitude, pos.coords.longitude);
-      applySunPosition(p);
-    });
-  }
-
-  window.addEventListener('load', () => { initRealSun(); });
-</script>
-
-<script>
-  (function () {
-    document.getElementById('morningBtn').addEventListener('click', () => setSunTime(7, 0));
-    document.getElementById('noonBtn')   .addEventListener('click', () => setSunTime(12, 0));
-    document.getElementById('eveningBtn').addEventListener('click', () => setSunTime(17, 30));
-    document.getElementById('nowBtn')    .addEventListener('click', () => initRealSun());
-  })();
-</script>
 
 <script>
 (function () {
